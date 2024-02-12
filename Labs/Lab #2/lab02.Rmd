@@ -2,12 +2,12 @@
 title: "Lab 2"
 author: "Bryan Nevarez"
 output: pdf_document
-date: "11:59PM February 20"
+date: "11:59PM February 8"
 ---
 
 # Basic Modeling
 
-* In class we considered a variable `x_3` which measured "criminality". We imagined L = 4 levels "none", "infraction", "misdemeanor" and "felony". Create a variable `x_3` here with 100 random elements (equally probable). Create it as a nominal (i.e. unordered) factor.
+-   In class we considered a variable `x_3` which measured "criminality". We imagined L = 4 levels "none", "infraction", "misdemeanor" and "felony". Create a variable `x_3` here with 100 random elements (equally probable). Create it as a nominal (i.e. unordered) factor.
 
 ```{r}
 n = 100 
@@ -15,21 +15,21 @@ x_3 = as.factor(sample(c("none", "infraction", "misdimeanor", "felony"), size = 
 x_3
 ```
 
-* Use `x_3` to create `x_3_bin`, a binary feature where 0 is no crime and 1 is any crime.
+-   Use `x_3` to create `x_3_bin`, a binary feature where 0 is no crime and 1 is any crime.
 
 ```{r}
 x_3_bin = ifelse(x_3 == "none",0,1)
 x_3_bin
 ```
 
-* Use `x_3` to create `x_3_ord`, an ordered factor variable. Ensure the proper ordinal ordering.
+-   Use `x_3` to create `x_3_ord`, an ordered factor variable. Ensure the proper ordinal ordering.
 
 ```{r}
 x_3_ord = factor(x_3, ordered = TRUE, levels = c("none", "infraction", "misdemeanor", "felony"))
 x_3_ord
 ```
 
-* Convert this variable into three binary variables without any information loss and put them into a data matrix.
+-   Convert this variable into three binary variables without any information loss and put them into a data matrix.
 
 ```{r}
 X = cbind(
@@ -40,18 +40,17 @@ X = cbind(
 X 
 ```
 
-* What should the sum of each row be (in English)? 
+-   What should the sum of each row be (in English)?
 
-The row sum should be a numeric value of a '0' or a '1'. To remove the 
+The row sum should be a numeric value of a '0' or a '1'. To remove the
 
-Verify that. 
-
+Verify that.
 
 ```{r}
 rowSums(X, na.rm=TRUE)
 ```
 
-* How should the column sum look (in English)? 
+-   How should the column sum look (in English)?
 
 Column sums should be counts of number of each crime level in the data. I included an additional argument to omit the number of NA values from the calculations. We have 29 infractions, 0 misdemeanors, and 25 felonies.
 
@@ -61,7 +60,7 @@ Verify that.
 colSums(X, na.rm = TRUE)
 ```
 
-* Generate a matrix with 100 rows where the first column is realization from a normal with mean 17 and variance 38, the second column is uniform between -10 and 10, the third column is poisson with mean 6, the fourth column in exponential with lambda of 9, the fifth column is binomial with n = 20 and p = 0.12 and the sixth column is a binary variable with exactly 24% 1's dispersed randomly. Name the rows the entries of the `fake_first_names` vector.
+-   Generate a matrix with 100 rows where the first column is realization from a normal with mean 17 and variance 38, the second column is uniform between -10 and 10, the third column is poisson with mean 6, the fourth column in exponential with lambda of 9, the fifth column is binomial with n = 20 and p = 0.12 and the sixth column is a binary variable with exactly 24% 1's dispersed randomly. Name the rows the entries of the `fake_first_names` vector.
 
 ```{r}
 X = cbind(
@@ -97,7 +96,7 @@ X
 
 ```
 
-* Create a data frame of the same data as above except make the binary variable a factor "DOMESTIC" vs "FOREIGN" for 0 and 1 respectively. Use RStudio's `View` function to ensure this worked as desired.
+-   Create a data frame of the same data as above except make the binary variable a factor "DOMESTIC" vs "FOREIGN" for 0 and 1 respectively. Use RStudio's `View` function to ensure this worked as desired.
 
 ```{r}
 X = data.frame(
@@ -111,7 +110,7 @@ X = data.frame(
 rownames(X) = fake_first_names
 ```
 
-* Print out a table of the binary variable. Then print out the proportions of "DOMESTIC" vs "FOREIGN".
+-   Print out a table of the binary variable. Then print out the proportions of "DOMESTIC" vs "FOREIGN".
 
 ```{r}
 table(X$origin)
@@ -182,10 +181,9 @@ X
 
 ```
 
-
 ## Basic Binary Classification Modeling
 
-* Load the famous `iris` data frame into the namespace. Provide a summary of the columns using the `skim` function in package `skimr` and write a few descriptive sentences about the distributions using the code below in English.
+-   Load the famous `iris` data frame into the namespace. Provide a summary of the columns using the `skim` function in package `skimr` and write a few descriptive sentences about the distributions using the code below in English.
 
 ```{r}
 data(iris)
@@ -210,7 +208,7 @@ y = ifelse(set_and_vers$Species == "versicolor", 1,0)
 y
 ```
 
-* Write a function `mode` returning the sample mode of a vector of numeric values. Try not to look in the class notes.
+-   Write a function `mode` returning the sample mode of a vector of numeric values. Try not to look in the class notes.
 
 ```{r}
 find_mode = function(vec){
@@ -219,7 +217,7 @@ find_mode = function(vec){
 }
 ```
 
-* Fit a threshold model to `y` using the feature `Sepal.Length`. Write your own code to do this. What is the estimated value of the threshold parameter? Save the threshold value as `threshold`. 
+-   Fit a threshold model to `y` using the feature `Sepal.Length`. Write your own code to do this. What is the estimated value of the threshold parameter? Save the threshold value as `threshold`.
 
 ```{r}
 
@@ -259,7 +257,7 @@ summary(iris[iris$Species == "versicolor", "Sepal.Length"])
 
 TO-DO: Write your answer here in English.
 
-Yes, the threshold model's performance in finding the sepal length of 5.4 to be the "best" threshold at determining what is a virginica versus a setosa flower does do a pretty good job since, based upon the summaries of the training data as seen above, a majority of the setosa flowers have a lower sepal length than 5.4 and the majority of the virginica flowers have a longer sepal length than 5.4. 
+Yes, the threshold model's performance in finding the sepal length of 5.4 to be the "best" threshold at determining what is a virginica versus a setosa flower does do a pretty good job since, based upon the summaries of the training data as seen above, a majority of the setosa flowers have a lower sepal length than 5.4 and the majority of the virginica flowers have a longer sepal length than 5.4.
 
 Create the function `g` explicitly that can predict `y` from `x` being a new `Sepal.Length`.
 
