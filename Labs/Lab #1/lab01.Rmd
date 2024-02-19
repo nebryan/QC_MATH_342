@@ -385,5 +385,5 @@ list_within_list$M$GenX[3]
 Now cleanup the namespace by deleting all stored objects and functions:
 
 ```{r}
-rm()
+rm(list = ls())
 ```
