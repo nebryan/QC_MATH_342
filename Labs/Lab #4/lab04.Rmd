@@ -1,0 +1,574 @@
+---
+title: "Lab 4 MATH 342W"
+author: "Bryan Nevarez"
+output: pdf_document
+date: "11:59PM March 3rd"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+Create a dataset D which we call `Xy` such that the linear model has
+R\^2 about 0% but x, y are clearly associated.
+
+```{r}
+x = seq(0,6*pi, length.out = 1000)
+y = sin(x)
+
+pacman::p_load(ggplot2)
+#first check that Rsq is around zero
+summary(lm(y ~ x))$r.squared
+#now check association visually
+ggplot(data.frame(x = x, y = y)) + geom_point(aes(x = x, y = y))
+```
+
+Write a function `my_ols` that takes in `X`, a matrix with with p
+columns representing the feature measurements for each of the n units, a
+vector of n responses `y` and returns a list that contains the `b`, the
+p+1-sized column vector of OLS coefficients, `yhat` (the vector of n
+predictions), `e` (the vector of n residuals), `df` for degrees of
+freedom of the model, `SSE`, `SST`, `MSE`, `RMSE` and `Rsq` (for the
+R-squared metric). Internally, you cannot use `lm` or any other package;
+it must be done manually. You should throw errors if the inputs are
+non-numeric or not the same length. Or if `X` is not otherwise suitable.
+You should also name the class of the return value `my_ols` by using the
+`class` function as a setter. No need to create ROxygen documentation
+here.
+
+```{r}
+my_ols = function(X, y){
+  X = cbind(1,X)
+  b = solve(t(X) %*% X) %*% t(X) %*% y
+  
+  y_hat = X %*% b
+  
+  e = y - y_hat 
+  
+  SSE = sum(e^2)
+  
+  SST = sum((y - mean(y))^2)
+  
+  df = ncol(X)
+  n = nrow(X)
+  MSE = SSE / (n - df)
+  
+  RMSE = sqrt(MSE)
+  Rsq = 1 - SSE / SST    
+  
+  lmobj = list(
+    b = b, 
+    y_hat = y_hat, 
+    e = e, 
+    SSE = SSE, 
+    SST = SST, 
+    df = df, 
+    MSE = MSE, 
+    RMSE = RMSE, 
+    Rsq = Rsq
+  )
+  class(lmobj) = "my_ols"
+  lmobj
+}
+```
+
+Verify that the OLS coefficients for the `Type` of cars in the cars
+dataset gives you the same results as we did in class (i.e. the ybar's
+within group).
+
+```{r}
+cars=MASS::Cars93
+X= model.matrix(~Type,cars)
+head(X)
+y=cars$Price
+my_ols(X[,-1],y)$b
+```
+
+Create a prediction method `g` that takes in a vector `x_star` and the
+dataset D i.e. `X` and `y` and returns the OLS predictions. Let `X` be a
+matrix with with p columns representing the feature measurements for
+each of the n units
+
+```{r}
+g = function(x_star, X, y){
+  c(1, x_star) = X %*% my_ols(X,y)$b
+}
+```
+
+Load up the famous iris dataset. We are going to do a different
+prediction problem. Imagine the only input x is Species and you are
+trying to predict y which is Petal.Length. A reasonable prediction is
+the average petal length within each Species. Prove that this is the OLS
+model by fitting an appropriate `lm` and then using the predict function
+to verify.
+
+```{r}
+data(iris)
+
+coef(lm(Petal.Length ~ Species, iris))
+
+mean(iris$Petal.Length[iris$Species == "setosa"])
+mean(iris$Petal.Length[iris$Species == "versicolor"])
+mean(iris$Petal.Length[iris$Species == "virginica"])
+
+predict(lm(Petal.Length ~ Species, iris), data.frame(Species = "setosa"))
+predict(lm(Petal.Length ~ Species, iris), data.frame(Species = "versicolor"))
+predict(lm(Petal.Length ~ Species, iris), data.frame(Species = "virginica"))
+
+
+```
+
+Construct the design matrix with an intercept, X without using
+`model.matrix`.
+
+```{r}
+
+cbind(1, ifelse(iris$Species == "versicolor", 1, 0), ifelse(iris$Species == "virginica", 1, 0))
+
+```
+
+We now load the diamonds dataset. Skim the dataset using skim or
+summary. What is the datatype of the color feature?
+
+ANS: The data type of the color feature is an ordered factor.
+
+```{r}
+rm(list = ls())
+pacman::p_load(ggplot2, skimr)
+diamonds = ggplot2::diamonds
+skim(diamonds)
+summary(diamonds)
+class(diamonds$color)
+```
+
+Find the levels of the color feature.
+
+```{r}
+levels(diamonds$color)
+```
+
+Create new feature in the diamonds dataset, `color_as_numeric`, which is
+color expressed as a continuous interval value.
+
+```{r}
+diamonds$color_as_numeric = as.numeric(diamonds$color)
+head(diamonds)
+```
+
+Use that converted feature as the one predictor in a regression. How
+well does this regression do as measured by RMSE?
+
+ANS: The regression based upon this one converted feature produces a
+larger RMSE as shown in the output below, and thus poor performance.
+
+```{r}
+lm(price ~ color_as_numeric, diamonds)
+summary(lm(price ~ color_as_numeric, diamonds))$sigma
+```
+
+Create new feature in the diamonds dataset, `color_as_nominal`, which is
+color expressed as a nominal categorical variable.
+
+```{r}
+diamonds$color_as_nominal = factor(diamonds$color, ordered = FALSE)
+head(diamonds)
+```
+
+Use that converted feature as the one predictor in a regression. How
+well does this regression do as measured by RMSE?
+
+```{r}
+lm(price ~ color_as_nominal, diamonds)
+summary(lm(price ~ color_as_nominal, diamonds))$sigma
+```
+
+Which regression does better - `color_as_numeric` or `color_as_nominal`?
+Why?
+
+ANS: 'color_as_nominal' does better because there are more dimensions to
+project upon rather than 'color_as_numeric' which is only
+one-dimensional.
+
+Now regress both `color_as_numeric` and `color_as_nominal` in a
+regression. Does this regression do any better (as gauged by RMSE) than
+either color_as_numeric`or`color_as_nominal\` alone?
+
+ANS: The regression on both these features seem to produce the same rmse
+as the regression upon color_as_nominal only.
+
+```{r}
+color_mod = lm(price ~ color_as_numeric + color_as_nominal, diamonds)
+summary(color_mod)$sigma
+```
+
+What are the coefficients (the b vector)?
+
+```{r}
+coef(color_mod)
+```
+
+Something appears to be anomalous in the coefficients. What is it? Why?
+
+ANS: The anomaly in the coefficients is the very last coefficient which
+is NA. This is because lm is automatically incorporating the intercept
+coefficient to be computed. And I also suspected that lm has a
+limitation in regressing upon two different features that contain two
+different datatypes.
+
+Return to the iris dataset. Find the hat matrix H for this regression.
+
+Find the hat matrix H for this regression of diamond price on diamond
+color. Use only the first 1,000 observation in the diamond dataset.
+
+```{r}
+rm(list = ls())
+
+diamonds1000 = ggplot2::diamonds[1:1000, ]
+diamonds1000$color = factor(diamonds1000$color, ordered = FALSE)
+X = model.matrix(price ~ color, diamonds1000)
+H = X %*% solve(t(X) %*% X) %*% t(X)
+```
+
+Verify this hat matrix is symmetric using the `expect_equal` function in
+the package `testthat`.
+
+```{r}
+pacman::p_load(testthat)
+expect_equal(H,t(H)) 
+```
+
+Verify this hat matrix is idempotent using the `expect_equal` function
+in the package `testthat`.
+
+```{r}
+pacman::p_load(testthat)
+expect_equal(H %*% H, H)
+```
+
+Using the `diag` function, find the trace of the hat matrix.
+
+```{r}
+sum(diag(H))
+Matrix::rankMatrix(H)[1]
+```
+
+It turns out the trace of a hat matrix is the same as its rank! But we
+don't have time to prove these interesting and useful facts..
+
+For masters students: create a matrix X-perpendicular.
+
+```{r}
+I = diag(nrow(H))
+X_perp = I - H
+
+y = t(t(diamonds1000$price))
+
+X_perp %*% y
+
+```
+
+Using the hat matrix, compute the yhat vector and using the projection
+onto the residual space, compute the e vector and verify they are
+orthogonal to each other.
+
+```{r}
+y = t(t(diamonds1000$price))
+yhat = H%*%y
+
+I = diag(nrow(H))
+
+e = (I-H) %*% y
+
+# expect_equal(y, yhat + e)
+
+y - (yhat + e)
+
+t(e) %*% yhat
+```
+
+Compute SST, SSR and SSE and R\^2 and then show that SST = SSR + SSE.
+
+```{r}
+SST = sum((y - mean(y))^2)
+  
+SSR = sum((yhat - mean(y))^2)
+  
+SSE = sum(e^2)
+
+SST - (SSR + SSE)
+
+Rsq = SSR / SST
+Rsq
+```
+
+Find the angle theta between y - ybar 1 and yhat - ybar 1 and then
+verify that its cosine squared is the same as the R\^2 from the previous
+problem.
+
+```{r}
+numer = sqrt(sum((yhat - mean(y))^2))
+denom = sqrt(sum((y - mean(y))^2))
+theta = acos(numer/denom)
+cos(theta)^2
+```
+
+Project the y vector onto each column of the X matrix and test if the
+sum of these projections is the same as yhat.
+
+```{r}
+n <- nrow(X)
+sum_proj_y <- matrix(0,nrow = n, ncol = 1)
+
+for(j in 1:ncol(X)){
+  x_j <- X[, j, drop = FALSE]
+  sum_proj_y <- sum_proj_y + (x_j %*% t(x_j) / sum(x_j^2)) %*% y
+}
+cbind(sum_proj_y, yhat)
+#expect_equal(yhat,sum_proj_y)
+sum(abs(yhat - sum_proj_y))
+```
+
+Convert this design matrix into Q, an orthonormal matrix.
+
+```{r}
+Q = matrix(NA, nrow = nrow(X), ncol = ncol(X))
+
+Q[, 1] = X[, 1]
+
+for(j in 2:ncol(X)){
+  Q[, j] = X[, j]
+  
+  for(k in 1:(j-1)){
+    q_k = Q[, k, drop = FALSE]
+    Q[, j] = Q[, j] - ( q_k %*% t(q_k) / sum(q_k^2) ) %*% X[, j]
+  }
+}
+
+for(i in 1:ncol(X)){
+  Q[,i] = Q[, i] / (sqrt(sum(Q[, i])^2))
+}
+
+```
+
+Project the y vector onto each column of the Q matrix and test if the
+sum of these projections is the same as yhat.
+
+```{r}
+n <- nrow(X)
+sum_proj_y <- matrix(0,nrow = n, ncol = 1)
+
+for(j in 1:ncol(Q)){
+  q_j <- Q[, j, drop = FALSE]
+  sum_proj_y <- sum_proj_y + ( q_j %*% t(q_j) / sum(q_j^2) ) %*% y
+}
+
+#expect_equal(yhat, sum_proj_y)
+
+yhat - sum_proj_y
+
+```
+
+Find the p=3 linear OLS estimates if Q is used as the design matrix
+using the `lm` method. Is the OLS solution the same as the OLS solution
+for X?
+
+```{r}
+mod_vanilla = lm(y ~ 0 + X)
+b = coef(mod_vanilla)
+b
+mod_ortho = lm(y~0 + Q)
+b_q = coef(mod_ortho)
+b_q
+```
+
+Use the predict function and ensure that the predicted values are the
+same for both linear models: the one created with X as its design matrix
+and the one created with Q as its design matrix.
+
+```{r}
+y_hat_vanilla = predict(mod_vanilla, data.frame(X))
+y_hat_ortho = predict(mod_ortho, data.frame(Q))
+y_hat_vanilla
+y_hat_ortho
+sum(abs(y_hat_vanilla - y_hat_ortho))
+```
+
+Clear the workspace and load the boston housing data and extract X and
+y. The dimensions are n = 506 and p = 13. Create a matrix that is (p +
+1) x (p + 1) full of NA's. Label the columns the same columns as X. Do
+not label the rows. For the first row, find the OLS estimate of the y
+regressed on the first column only and put that in the first entry. For
+the second row, find the OLS estimates of the y regressed on the first
+and second columns of X only and put them in the first and second
+entries. For the third row, find the OLS estimates of the y regressed on
+the first, second and third columns of X only and put them in the first,
+second and third entries, etc. For the last row, fill it with the full
+OLS estimates.
+
+```{r}
+rm(list = ls()) # clear workspace
+
+X = as.matrix(MASS::Boston[, 1 : 13]) # load Boston housing data and extract X
+y = MASS::Boston$medv # load Boston housing data and extract y
+
+p = ncol(X) # p, the number of features, is equal to the number of columns of X
+
+# create a (p+1) x (p+1) matrix full of NA's; it is named ols_estimates
+ols_estimates = matrix(NA, nrow = p+1, ncol = p+1) 
+
+# first column name is the "intercept" column name followed by the 13 column names of X
+colnames(ols_estimates) = c("intercept", colnames(X)) 
+
+# initialize first entry of the first row as the intercept column namely ybar (null model)
+ols_estimates[1,1] = coef(lm( y ~ 1))[[1]]
+
+# implement nested for loop to iterate through the columns of X and regress y progressively onto an additional column of X at each iteration and store the values of the OLS estimates in each row of the ols_estimates matrix
+for(i in 1:p){
+  for(j in 1:(i+1)){
+    ols_estimates[i+1,j] = coef(lm(y ~X[, 1:i]))[[j]]
+  }
+}
+
+# view the matrix of OLS estimates
+ols_estimates
+
+```
+
+Why are the estimates changing from row to row as you add in more
+predictors?
+
+ANS: The estimates change from row to row because an additional
+dimension is added to the least squares algorithm. Each row contains the
+OLS estimates for a hyperplane that lives in a dimension with one
+additional component than the previous one. Each step of this iterative
+process can be thought of the H matrix having its rank being incremented
+by one and the Hy result having an additional component to its output.
+
+Create a vector of length p+1 and compute the R\^2 values for each of
+the above models.
+
+```{r}
+# initialize a vector that will contain the R^2 for each of the above models
+coefs_of_deter = c(rep(NA, times = p+1))
+
+# enter the first entry of the vector that contains the R^2 value for the null model, g(x) = ybar, since R^2 = 1 - SSE/SST = 0 (SSE = SST by definition)
+coefs_of_deter[1] = 0
+
+# populate the vector with the R^2 values for each of the above models
+for(i in 1:p){
+  coefs_of_deter[i+1] = summary(lm(y ~X[, 1:i]))$r.squared
+}
+
+# view vector of R^2 values (as decimals)
+coefs_of_deter
+
+```
+
+Is R\^2 monotonically increasing? Why?
+
+ANS: Yes, R\^2 is monotonically increasing because as we add an
+additional dimensional component of data (a.k.a. "feature") to the least
+squares algorithm the model will produce a "better fit" to the data. The
+SSE is being further minimized with every additional feature column of
+data that comes from X.
+
+Create a 2x2 matrix with the first column 1's and the next column iid
+normals. Find the absolute value of the angle (in degrees, not radians)
+between the two columns in absolute difference from 90 degrees.
+
+```{r}
+# 2x2 matrix with a first column of 1's and the next column of iid normals, i.e., N(0,1)
+X = cbind(matrix(1, nrow = 2, ncol = 1), matrix(rnorm(2), nrow = 2, ncol = 1))
+X
+
+# find the absolute value of the angle in degrees (not radians) between the two columns 
+theta = acos((t(X[, 1]) %*% X[, 2])/(norm(X[, 1], type = "2")*norm(X[, 2], type = "2")))*(180/pi)  
+
+# compute the absolute difference of theta from 90 degrees
+abs_diff = abs(90 - theta)
+abs_diff
+```
+
+Repeat this exercise `Nsim = 1e5` times and report the average absolute
+angle.
+
+```{r}
+Nsim = 1e5
+
+abs_angles = c(rep(NA, times = Nsim))
+
+xrows = 4
+
+for(i in 1:Nsim){
+  # 2x2 matrix with a first column of 1's and the next column of iid normals, i.e., N(0,1)
+X = cbind(matrix(1, nrow = xrows, ncol = 1), matrix(rnorm(xrows), nrow = xrows, ncol = 1))
+X
+
+# find the absolute value of the angle in degrees (not radians) between the two columns 
+theta = acos((t(X[, 1]) %*% X[, 2])/(norm(X[, 1], type = "2")*norm(X[, 2], type = "2")))*(180/pi)  
+
+# compute the absolute difference of theta from 90 degrees
+abs_diff = abs(90 - theta)
+
+# save output of absolute difference of theta from 90 degrees into the vector abs_angles
+abs_angles[i] = abs_diff
+}
+
+# output of average absolute value (roughly 45 degrees)
+mean(abs_angles)
+
+```
+
+Create a n x 2 matrix with the first column 1's and the next column iid
+normals. Find the absolute value of the angle (in degrees, not radians)
+between the two columns. For n = 10, 50, 100, 200, 500, 1000, report the
+average absolute angle over `Nsim = 1e5` simulations.
+
+```{r}
+Nsim = 1e5
+
+# defined a function (avg_abs_diff) that reports the average absolute angle difference upon the number of components of the vectors (num_times)
+avg_abs_diff <- function(num_times){
+
+  abs_angles = c(rep(NA, times = Nsim))
+  for(i in 1:Nsim){
+    # 2x2 matrix with a first column of 1's and the next column of iid normals, i.e., N(0,1)
+  X = cbind(matrix(1, nrow = num_times, ncol = 1), matrix(rnorm(num_times), nrow = num_times, ncol =
+                                                            1))
+
+  # find the absolute value of the angle in degrees (not radians) between the two columns 
+  theta = acos((t(X[, 1]) %*% X[, 2])/(norm(X[, 1], type = "2")*norm(X[, 2], type =
+                                                                       "2")))*(180/pi)  
+
+  # compute the absolute difference of theta from 90 degrees
+  abs_diff = abs(90 - theta)
+
+  # save output of absolute difference of theta from 90 degrees into the vector abs_angles
+  abs_angles[i] = abs_diff
+  }
+  return(mean(abs_angles))
+}
+
+# results an output of the average absolute difference of angles from 90 degrees based upon the length of the vectors 
+sapply(c(2, 5, 10, 50, 100, 200, 500, 1000, 5000), avg_abs_diff)
+```
+
+What is this absolute angle difference from 90 degrees converging to?
+Why does this make sense?
+
+ANS: The absolute angle difference from 90 degrees converges to 0
+degrees. This convergence makes sense because it is an exhibition of the
+law of large numbers which states that the average sample mean of a
+sequence of random variables approaches the expectation given a
+sufficient large number of them. On average the sum of the entries in
+the second column vector of X will equal 0. The way we compute the angle
+between two vectors requires the dot product of the first column of X
+with the second column of X which results in the sum of the entries in
+the second column of X that are all iid \~ N(0,1). The denominator for
+the argument of inverse cosine contains the product of the first column
+which will be sqrt(n) and the norm of the vector in the second column of
+X. Since the norm of the second column of X is oftentimes non-zero, then
+its norm will be some positive quantity and the norm of the first column
+of X gets larger and larger as n increases. Thus, overall, the inverse
+cosine is taking an argument that is increasingly approaching 0 which in
+turn produces an output closer to 90 which implies that on average as n
+increases the mean absolute angle difference converges to 0.
