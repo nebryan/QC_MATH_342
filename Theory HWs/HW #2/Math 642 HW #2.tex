@@ -1,0 +1,1141 @@
+\documentclass[12pt]{article}
+\usepackage{tcolorbox}
+\usepackage{systeme}
+\usepackage{cancel}
+
+\include{preamble}
+
+\newtoggle{professormode}
+%\toggletrue{professormode} %STUDENTS: DELETE or COMMENT this line
+
+
+
+\title{MATH 342W / 642 Spring \the\year~Homework \#2}
+
+\author{Bryan Nevarez} %STUDENTS: write your name here
+
+\iftoggle{professormode}{
+\date{Due 11:59PM Feb 25, \the\year \\ \vspace{0.5cm} \small (this document last updated \currenttime~on \today)}
+}
+
+
+\newcommand{\sn}{$\displaystyle\sum_{i=1}^n$}
+\newcommand{\snmath}{\displaystyle\sum_{i=1}^n}
+
+\newcommand{\Xtran}{$ \left(X^\top X \right)^{-1}$}
+\newcommand{\Xtramath}{\left(X^\top X \right)^{-1}}
+
+\newcommand{\Xy}{$X^\top \mathbf{y}$}
+\newcommand{\Xymath}{X^\top \mathbf{y}}
+
+\newcommand{\bsol}{$ \left(X^\top X \right)^{-1} X^\top \mathbf{y} $}
+\newcommand{\bsolmath}{ \left(X^\top X \right)^{-1} X^\top \mathbf{y}}
+
+
+\newcommand{\na}{n_A}
+\newcommand{\xa}{x_A}
+\newcommand{\ya}{y_A}
+
+\newcommand{\nb}{n_B}
+\newcommand{\xb}{x_B}
+\newcommand{\yb}{y_B}
+
+\newcommand{\nc}{n_C}
+\newcommand{\xc}{x_C}
+\newcommand{\yc}{y_C}
+
+
+\renewcommand{\abstractname}{Instructions and Philosophy}
+
+\begin{document}
+\maketitle
+
+\iftoggle{professormode}{
+\begin{abstract}
+The path to success in this class is to do many problems. Unlike other courses, exclusively doing reading(s) will not help. Coming to lecture is akin to watching workout videos; thinking about and solving problems on your own is the actual ``working out.''  Feel free to \qu{work out} with others; \textbf{I want you to work on this in groups.}
+
+Reading is still \textit{required}. You should be googling and reading about all the concepts introduced in class online. This is your responsibility to supplement in-class with your own readings.
+
+The problems below are color coded: \ingreen{green} problems are considered \textit{easy} and marked \qu{[easy]}; \inorange{yellow} problems are considered \textit{intermediate} and marked \qu{[harder]}, \inred{red} problems are considered \textit{difficult} and marked \qu{[difficult]} and \inpurple{purple} problems are extra credit. The \textit{easy} problems are intended to be ``giveaways'' if you went to class. Do as much as you can of the others; I expect you to at least attempt the \textit{difficult} problems. 
+
+This homework is worth 100 points but the point distribution will not be determined until after the due date. See syllabus for the policy on late homework.
+
+Up to 7 points are given as a bonus if the homework is typed using \LaTeX. Links to instaling \LaTeX~and program for compiling \LaTeX~is found on the syllabus. You are encouraged to use \url{overleaf.com}. If you are handing in homework this way, read the comments in the code; there are two lines to comment out and you should replace my name with yours and write your section. The easiest way to use overleaf is to copy the raw text from hwxx.tex and preamble.tex into two new overleaf tex files with the same name. If you are asked to make drawings, you can take a picture of your handwritten drawing and insert them as figures or leave space using the \qu{$\backslash$vspace} command and draw them in after printing or attach them stapled.
+
+The document is available with spaces for you to write your answers. If not using \LaTeX, print this document and write in your answers. I do not accept homeworks which are \textit{not} on this printout. Keep this first page printed for your records.
+
+\end{abstract}
+
+\thispagestyle{empty}
+\vspace{1cm}
+NAME: \line(1,0){380}
+\clearpage
+}
+
+%============================================
+% PROBLEM #1: Nate Silver's The Signal and Noise (Chapters 2 & 3)
+%============================================
+\problem{These are questions about Silver's book, chapter 2, 3.  Answer the questions using notation from class (i.e. $t ,f, g, h^*, \delta, \epsilon, e, t, z_1, \ldots, z_t, \mathbb{D}, \mathcal{H}, \mathcal{A}, \mathcal{X}, \mathcal{Y}, X, y, n, p, x_{\cdot 1}, \ldots, x_{\cdot p}, x_{1 \cdot}, \ldots, x_{n \cdot}$, etc).}
+
+
+\begin{enumerate}
+
+
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\intermediatesubproblem{If one's goal is to fit a model for a phenomenon $y$, what is the difference between the approaches of the hedgehog and the fox? Connecting this to the modeling framework should really make you think about what Tetlock's observation means for political and historical phenomena.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+One major difference between the two schools of thought is that hedgehogs utilize new data $x_{\cdot 1}, \ldots, x_{\cdot p}$ to refine the original model which comes from a specific set of hypotheses $\mathcal{H}$. However, foxes find different approaches or have multiple hypotheses sets $\mathcal{H}$ when the original model is not working and/or when encountering new data. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\easysubproblem{Why did Harry Truman like hedgehogs? Are there a lot of people that think this way?}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Harry Truman preferred \emph{hedgehogs} over \emph{foxes} because \emph{hedgehogs} are characterized by having the type of personality that befits a leader in wanting to enact a change/policy and who strongly believes in the decision(s) for said change/policy. \emph{Foxes}, on the other hand, are much more skeptical of their own findings from their predictive models because of their both careful and nuanced perspective on the complexity of the problem/phenomenon that they are trying to make sense of. \emph{Foxes}' propensity to not be as bold is often mischaracterized as a ``lack of self-confidence.'' I am sure that former President Truman preferred a confident, clear, and simple answer from an advisor rather than a cautious, ambiguous advice from an erudite expert.
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\hardsubproblem{Why is it that the more education one acquires, the less accurate one's predictions become?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+With more education one acquires, the less accurate are one's predictions because $z_1, \cdots, z_t$'s reveal more complexity behind the phenomena one is trying to model. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (d)
+%--------------------------------------------
+\easysubproblem{Why are probabilistic classifiers (i.e. algorithms that output functions that return probabilities) better than vanilla classifiers (i.e. algorithms that only return the class label)? We will move in this direction in class soon.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Instead of using vanilla classifiers that only produces one output for a prediction, $\hat{y}$, probabilistic classifiers give you a fuller range of possible end results with probabilities, $p$, associated with each. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (e)
+%--------------------------------------------
+\easysubproblem{What algorithm that we studied in class is PECOTA most similar to?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The algorithm, $\mathcal{A}$, we learned in class most similar to PECOTA is the \emph{nearest neighbor} algorithm. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (f)
+%--------------------------------------------
+\easysubproblem{Is baseball performance as a function of age a linear model? Discuss.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The predictive model, $g$, for baseball performance as a function of age cannot be a purely linear model because based upon previous data, $\mathcal{D}$, every past professional baseball player has had their performance increase then decrease based upon their age. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (g)
+%--------------------------------------------
+\intermediatesubproblem{How can baseball scouts do better than a prediction system like PECOTA?}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Baseball scouts can make better predictions than a system like PECOTA because scouts are often privy to more information, a.k.a, features ($x_{\cdot p}$) that make their model $g$ have better predictive performance than that of statistical algorithms, $\mathcal{A}$ that purely utilize statistical information. Due to human judgment, baseball scouts are sensitive to understanding the underlying factors ($z_1, \ldots, z_t$) for why certain baseball players do better or worse in the future. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (h)
+%--------------------------------------------
+\intermediatesubproblem{Why hasn't anyone (at the time of the writing of Silver's book) taken advantage of Pitch f/x data to predict future success?}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+One possible reason why, at the time of writing of Silver's book, no one has yet taken advantage of Pitch f/x data to predict future success was because there probably were no sophisticated algorithms $\mathcal{A}$ that would be able make good use of the information that it produced.  
+
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+\newpage
+%============================================
+% PROBLEM #2: Support Vector Machines (SVM)
+%============================================
+\problem{These are questions about the SVM.}
+
+\begin{enumerate}
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\easysubproblem{State the hypothesis set $\mathcal{H}$ inputted into the support vector machine algorithm. Is it different than the $\mathcal{H}$ used for $\mathcal{A}$ = perceptron learning algorithm?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Hypothesis set $\mathcal{H}$ for SVM: 
+\[
+	\mathcal{H} = \lbrace \indic{\mathbf{w} \cdot \mathbf{x} - b \geq 0} : \mathbf{w} \in \reals^p, \, b \in \reals \rbrace 
+\]
+
+The hypothesis sets are the same. They are just a reformulation of the other. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\extracreditsubproblem{Prove the max-margin linearly separable SVM converges. State all assumptions. Write it on a separate page.}\spc{-0.5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\hardsubproblem{Let $\mathcal{Y} = \braces{-1,1}$. Rederive the cost function whose minimization yields the SVM line in the linearly separable case. }\spc{20}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+We define a hyperplane in ``Hesse Normal Form'' defined by $\ell:  \mathbf{w}^\top \mathbf{x} - b = 0$ to be the hyperplane that does ``best'' in classifying two different groups of data points that are assumed to be linearly separable. By construction, we want $\mathbf{w} \perp \ell$.  This hyperplane is optimal when the distance of the margin between these two sets of data points is maximized. We have two sets for the training data are labeled by $\mathcal{Y} = \braces{-1, +1}$. The data point $\mathbf{x}_i$ which is labeled by $y_i = 1$ closest to the optimal hyperplane will be the point on the margin defined by $\mathbf{w}^\top \mathbf{x}_i - b = 1$ and the data point $\mathbf{x}_j$ which is labeled by $y_j = 1$ closest to the optimal hyperplane will the point on the other margin defined by $\mathbf{w}^\top \mathbf{x}_j - b = -1$. Subtracting these two equations we get: $\mathbf{w}^\top(\mathbf{x}_i - \mathbf{x}_j) = 2$. Dividing by $\norm{\mathbf{w}}$ will give us the length of the projection of $\mathbf{x}_i - \mathbf{x}_j$ onto the unit vector $\dfrac{\mathbf{w}}{\norm{\mathbf{w}}}$ which is precisely the distance between the margins, namely $\dfrac{2}{\norm{\mathbf{w}}}$. We want to maximize this distance which is equivalent to saying that we want to minimize $\norm{\mathbf{w}}$. Now, $\forall i$ such that $y_1 = 1$ we have that $\mathbf{w}^\top \mathbf{x}_i - b \geq 1 \implies y_i \left( \mathbf{w}^\top \mathbf{x}_i - b  \right) \geq 1$. Similarly, $\forall i$ such that $y_1 = 1$ we have that $\mathbf{w}^\top \mathbf{x}_i - b < -1 \implies y_i \left( \mathbf{w}^\top \mathbf{x}_i - b  \right) > 1$. Therefore, the condition $y_i \left( \mathbf{w}^\top \mathbf{x}_i - b  \right)$ must hold $\forall i \in \lbrace 1, 2, \ldots, n \rbrace$. To find the maximum margin hyperplane we must, 
+
+\[
+	\mathrm{min} \norm{\mathbf{w}} \quad \text{such that} \quad \forall i y_i\left(\mathbf{w}^\top \mathbf{w}_i - b\right) \geq1
+	\]
+\end{tcolorbox}
+
+\newpage
+
+%--------------------------------------------
+% Part (d)
+%--------------------------------------------
+\easysubproblem{Given your answer to (c) rederive the cost function using the \qu{soft margin} i.e. the hinge loss plus the term with the hyperparameter $\lambda$. This is marked easy since there is just one change from the expression given in class.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+For the ``soft margin'' version we include a hinge loss for the data points that are incorrectly classified by the optimal hyperplane. Without loss of generality suppose we have a data point $\mathbf{x}_r$ whose correct label is $y_r = -1$ but it has a classifier score of $w^\top x_r -b = +1$. So there would exist an ``error'' $e_r$ such that $y_r(\mathbf{w}^\top \mathbf{x}_r - b) + e_{r} \geq 1 \implies e_r = 1 - y_r(\mathbf{w}^\top \mathbf{x}_r - b)$. We compute the hinge loss error by $\max{0, e_r}$. The total hinge error (THE) would be defined as :
+\[
+\mathrm{THE} = \snmath \max{0, 1 - y_i(\mathbf{w}^\top \mathbf{x}_i - b}.
+\]
+
+Our new cost function with the hinge loss plus with the hyperparameter $\lambda$ will look like: 
+
+\[
+	\mathrm{min} \quad \lambda \norm{\mathbf{w}}^2 +  \dfrac{1}{n} \snmath \max{0, 1 - y_i(\mathbf{w}^\top \mathbf{x}_i - b)}
+\]
+
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+\newpage
+%============================================
+% PROBLEM #3: k-nearest neighbors (KNN) algorithm
+%============================================
+\problem{These are questions are about the $k$ nearest neighbors (KNN) algorithm.}
+
+\begin{enumerate}
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\easysubproblem{Describe how the algorithm works. Is $k$ a \qu{hyperparameter}?}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The $k$ nearest neighbors algorithm predicts on a new data point $x_\star$ by computing which training data point $x_i$ is ``closest'' to it by a predefined metric $d(x_i, x_\star)$. The distance is either the $L^1$ or $L^2$ (\emph{default}) loss/distance function. Yes, $k$ is a hyperparameter because the choice of $k$ is selected prior to running the algorithm. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\hardsubproblem{[MA] Assuming $\mathcal{A} = $ KNN, describe the input $\mathcal{H}$ as best as you can.}\spc{8}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Assuming $\mathcal{A} = $ KNN, the hypothesis set $\mathcal{H}$ is the set of all functions $f : \reals^p \to \mathcal{Y}$. 
+
+The description of $\mathcal{H}$ is based upon the fact that the training data we have $p$ components/features and we are trying to map a new datum to the response label of the mode for those $k-$neighbors ``nearest'' to it based upon a defined metric. 
+
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\easysubproblem{When predicting on $\mathbb{D}$ with $k=1$, why should there be zero error? Is this a good estimate of future error when new data comes in? (Error in the future is called \emph{generalization error} and we will be discussing this later in the semester).}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+When predicting on $\mathbb{D}$ with $k=1$, the error should be zero because the ``nearest neighbor'' to each training data is itself! Of course this is not a good estimate of future error when new data comes there is a very likely that the new data points are not the training data points and therefore the metric that defines how ``close'' the points are will produce a positive ``distance''. 
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+\newpage
+%============================================
+% PROBLEM #4: Linear Model with p = 1
+%============================================
+\problem{These are questions about the linear model with $p=1$.}
+
+\begin{enumerate}
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\easysubproblem{What does $\mathbb{D}$ look like in the linear model with $p=1$? What is $\mathcal{X}$? What is $\mathcal{Y}$?}\spc{3}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+For the linear model with $p=1$, $\mathbb{D}$ looks like the following: 
+\[
+\mathcal{X} = \begin{bmatrix} 1 & x_1 \\
+1 & x_2 \\
+\vdots & \vdots \\
+1 & x_n \end{bmatrix}, \quad \mathcal{Y} = \reals
+\]
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\easysubproblem{Consider the line fit using the ordinary least squares (OLS) algorithm. Prove that the point $<\xbar, \ybar>$ is on this line. Use the formulas we derived in class.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The line-of-best fit in the simple linear regression done in class has the following equation: 
+
+\[
+	\hat{y} = g(x) = \beta_0 + \beta_1 x, \quad \text{where } \beta_0 = \ybar - \beta_1 \xbar
+\]
+
+We will show that $<\xbar, \ybar>$ is on this line. 
+
+Input $\xbar$ into $g$ and we get: 
+\begin{align*}
+	g(\xbar) &= \beta_0 + \beta_1 \xbar \\
+			&= \ybar - \beta_1 \xbar + \beta_1 \xbar \\
+			&= \ybar. \quad \blacksquare
+\end{align*}
+
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\intermediatesubproblem{Consider the line fit using OLS. Prove that the average prediction $\hat{y}_i := g(x_i)$ for $x_i \in \mathbb{D}$ is $\ybar$.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+\begin{align*}
+	\dfrac{1}{n} \snmath \hat{y}_i = \dfrac{1}{n} \snmath g(x_i) &= \dfrac{1}{n} \snmath (\beta_0 + \beta_1 x_i) \\
+	&= \dfrac{1}{n} \left(n \beta_0 + \beta_1 n \xbar \right) \\
+	&= \beta_0 + \beta_1 \xbar \\
+	&= \ybar - \cancel{\beta_1 \xbar} + \cancel{\beta_1 \xbar} \\
+	&= \ybar \quad \blacksquare
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (d)
+%--------------------------------------------
+\intermediatesubproblem{Consider the line fit using OLS. Prove that the average residual $e_i$ is 0 over $\mathbb{D}$.}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+\begin{align*}
+	\overline{e} = \dfrac{1}{n} \snmath e_i &= \dfrac{1}{n} \snmath (y_i - \hat{y}_i)\\
+	&= \dfrac{1}{n} \snmath y_i - \dfrac{1}{n} \snmath \hat{y}_i\\
+	&= \dfrac{1}{\cancel{n}} \cdot \cancel{n}\ybar - \ybar && \Longleftarrow \emph{by part(c)}\\
+	&= \ybar - \ybar = 0 \quad \blacksquare
+\end{align*}
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (e)
+%--------------------------------------------
+\intermediatesubproblem{Why is the RMSE usually a better indicator of predictive performance than $R^2$? Discuss in English.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+RMSE is usually a better indicator of predictive performance than $R^2$ because it can measure of your model on training data and on ``unseen'' testing data whereas $R^2$ only indicates how well the model captures the variability of the training data but has no bearing on the ``unseen'' testing data. Another practical reason why the RMSE is a preferred measure of predictive performance is because its unit is the same unit as the response variable so it makes it easier to interpret the error/performance. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (f)
+%--------------------------------------------
+\intermediatesubproblem{$R^2$ is commonly interpreted as \qu{proportion of the variance explained by the model} and proportions are constrained to the interval $\zeroonecl$. While it is true that $R^2 \leq 1$ for all models, it is not true that $R^2 \geq 0$ for all models. Construct an explicit example $\mathbb{D}$ and create a linear model $g(x) = w_0 + w_1 x$ whose $R^2 < 0$.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Let $\mathbb{D} = \langle (1, 40), (2, 30), (3, 18), (4, 6), (5, 2), (6, 11), (7, 19), (8, 27), (9, 39), (10, 42) \rangle.$
+
+Suppose we have a linear model $g(x) = 10x$. Then after tabulating the predicted values $\hat{y}_i$'s and calculating the SST and the SSE we get that: 
+
+\[
+	\mathrm{SST} = \snmath (y_i - \ybar )^2 = 4580.08 \quad \mathrm{SSE} = \snmath (y_i - \hat{y}_i)^2 = 18380
+\] 
+
+Our coefficient of determination $R^2$:
+
+\[
+	R^2 = 1 - \dfrac{\mathrm{SSE}}{\mathrm{SST}} = 1 - \dfrac{18380}{4580.08} = -3.013\ldots < 0
+\]
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (g)
+%--------------------------------------------
+\hardsubproblem{You are given $\mathbb{D}$ with $n$ training points $<x_i, y_i>$ but now you are also given a set of weights $\bracks{w_1~w_2~ \ldots ~w_n}$ which indicate how costly the error is for each of the $i$ points. Rederive the least squares estimates $b_0$ and $b_1$ under this situation. Note that these estimates are called the \emph{weighted least squares regression} estimates. This variant $\mathcal{A}$ on OLS has a number of practical uses, especially in Economics. No need to simplify your answers like I did in class (i.e. you can leave in ugly sums).}\spc{12.5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The difference in this version of least squares is that we have a set of weights for each of the errors $e_i$ that are made for each $i \in \lbrace 1, 2, \ldots, n \rbrace$.
+
+Our SSE would then look like the following: $\mathrm{SSE} = \snmath w_i e_i^2$. Our predictive model is still $\hat{y} = g(x) = b_0 + b_1 x$.
+
+To find $b_0$:
+
+\begin{align*}
+	\partialop{b_0}{\mathrm{SSE}} &= \partialop{b_0}{\snmath w_i e_i^2} \\
+	&= \partialop{b_0}{\snmath w_i (y_i - \hat{y}_i)^2} \\
+	&= \partialop{b_0}{\snmath w_i (y_i - b_0 - b_1 x_i)^2} \\
+	&= \snmath \partialop{b_0}{ w_i (y_i - b_0 - b_1 x_i)^2} \\
+	&= \snmath -2 w_i (y_i - b_0 - b_1 x_i) \\
+	&= -2 \snmath( w_i y_i - w_i b_0 - w_i b_1 x_i)\\
+	&= -2 ( \snmath w_i y_i - b_0 \snmath w_i  - b_1 \snmath w_i x_i) \overset{\mathrm{set}}{=} 0
+\end{align*}
+
+Solve for $b_0 \implies b_0 = \dfrac{\snmath w_i y_i}{\snmath w_i} - b_1 \dfrac{\snmath w_i x_i}{\snmath w_i}$.
+
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (g) continued}: 
+
+\vspace{3mm}
+
+To find $b_1$:
+
+\begin{align*}
+	\partialop{b_1}{\mathrm{SSE}} &= \partialop{b_1}{\snmath w_i e_i^2} \\
+	&= \partialop{b_1}{\snmath w_i (y_i - \hat{y}_i)^2} \\
+	&= \partialop{b_1}{\snmath w_i (y_i - b_0 - b_1 x_i)^2} \\
+	&= \snmath \partialop{b_1}{ w_i (y_i - b_0 - b_1 x_i)^2} \\
+	&= \snmath -2  w_i x_i (y_i - b_0 - b_1 x_i) \\
+	&= -2 \snmath( w_i x_i y_i - w_i x_i b_0 - w_i b_1 x_i^2)\\
+	&= -2 ( \snmath w_i x_i y_i - b_0 \snmath w_i x_i  - b_1 \snmath w_i x_i^2) \overset{\mathrm{set}}{=} 0
+\end{align*}
+
+Solve for $b_1 \implies b_1 = \dfrac{\snmath w_i x_i y_i}{\snmath w_i x_i^2} - b_0 \dfrac{\snmath w_i x_i}{\snmath w_i x_i^2}$.
+
+\end{tcolorbox}
+%--------------------------------------------
+% Part (h)
+%--------------------------------------------
+\intermediatesubproblem{Interpret the ugly sums in the $b_0$ and $b_1$ you derived above and compare them to the $b_0$ and $b_1$ estimates in OLS. Does it make sense each term should be altered in this matter given your goal in the weighted least squares?}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The $b_0$ and $b_1$ terms derived above look similar to the estimates found in OLS. The estimates found in the weighted OLS differ mostly by the added weights. For example $b_0$ found in OLS looks like a weighted average version of the $x_i$'s and $y_i$'s.
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (i)
+%--------------------------------------------
+\extracreditsubproblem{In class we talked about $x_{raw} \in \braces{\text{red}, \text{green}}$ and the OLS model was the sample average of the inputted $x$. Imagine if you have the additional constraint that $x_{raw}$ is ordinal e.g. $x_{raw} \in \braces{\text{low}, \text{high}}$ and you were forced to have a model where $g$(low) $\leq$ $g$(high). Write about an algorithm $\mathcal{A}$ that can solve this problem.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+\newpage
+%============================================
+% PROBLEM #5: Association and Correlation
+%============================================
+\problem{These are questions about association and correlation.}
+
+\begin{enumerate}
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\easysubproblem{Give an example of two variables that are both correlated and associated by drawing a plot.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+\vspace{-20mm}
+
+\begin{center}
+\includegraphics[scale=.4]{corr_and_assoc.pdf}
+\end{center}
+
+\vspace{-20mm}
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\easysubproblem{Give an example of two variables that are not correlated but are associated by drawing a plot.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+\vspace{-20mm}
+
+\begin{center}
+\includegraphics[scale=.4]{not_corr_yet_assoc.pdf}
+\end{center}
+
+\vspace{-20mm}
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\easysubproblem{Give an example of two variables that are not correlated nor associated by drawing a plot.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+\vspace{-15mm}
+
+\begin{center}
+\includegraphics[scale=.4]{no_corr_nor_assoc.pdf}
+\end{center}
+
+\vspace{-15mm}
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (d)
+%--------------------------------------------
+\easysubproblem{Can two variables be correlated but not associated? Explain.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Strictly speaking any two variables that are linearly correlation are technically associated as well. Of relationships between variables that are correlated, they are a subset of all relationships between variables that are associated. The one thing that is clear about correlation between two variables is that it does not imply causation.
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+\newpage
+%============================================
+% PROBLEM #6: Multivariate Linear Model fitting using the least squares algorithm
+%============================================
+\problem{These are questions about multivariate linear model fitting using the least squares algorithm.}
+
+\begin{enumerate}
+
+%--------------------------------------------
+% Part (a)
+%--------------------------------------------
+\hardsubproblem{Derive $\partialop{\c}{\c^\top A \c}$ where $\c \in \reals^n$ and $A \in \reals^{n \times n}$ but \textit{not} symmetric. Get as far as you can.}\spc{8}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Let $A \in \reals^{n \times n}$ and $\c \in \reals^n$. So, $A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\ 
+a_{n1} & a_{n2} & \cdots & a_{nn} \end{bmatrix}$ and $\c = \begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix}$. 
+
+So we have, 
+
+\begin{align*}
+	\c^\top A \c &= \begin{bmatrix} c_1 & c_2 & \cdots & c_n \end{bmatrix}  \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\ 
+a_{n1} & a_{n2} & \cdots & a_{nn} \end{bmatrix} \begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix} \\
+&= \begin{bmatrix} c_1 & c_2 & \cdots & c_n \end{bmatrix} \begin{bmatrix} a_{11} c_1 + a_{12} c_2 + \cdots + a_{1n} c_n \\
+a_{21} c_1 + a_{22} c_2 + \cdots + a_{2n} c_n \\
+\vdots \hspace{12mm} \vdots \hspace{10mm} \ddots \hspace{10mm} \vdots \\ a_{n1} c_1 + a_{n2} c_2 + \cdots + a_{nn} c_n \end{bmatrix} \\
+&= c_1 \left( \snmath a_{1i} c_i \right) + c_2 \left( \snmath a_{2i} c_i \right) + \cdots + c_n \left( \snmath a_{ni} c_i \right) = \sum_{j=1}^n c_j \left( \snmath a_{ji} c_i \right)
+\end{align*}
+
+Take partial derivative with respect to the $k^{th}$ component of $\c$: 
+\begin{align*}
+\partialop{c_k}{\c^\top A \c} &= \partialop{c_k}{\sum_{j=1}^n c_j \left( \snmath a_{ji} c_i \right)}\\
+&= \partialop{c_k}{c_k \left( \snmath a_{ki} c_i \right)} + \partialop{c_k}{\sum_{j\neq k} c_j \left( \snmath a_{ji} c_i \right)} \\
+&= \snmath a_{ki} c_i + a_{kk} c_k + \sum_{j\neq k} a_{jk} c_j\\
+&= \snmath a_{ki} c_i  + \sum_{j =  1}^n a_{jk} c_j
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (a) continued}: 
+
+\vspace{3mm}
+
+Now we will finish the derivation: 
+
+\begin{align*}
+\partialop{\c}{\c^\top A \c} &= \begin{bmatrix}
+\vspace{5mm}
+\partialop{c_1}{\c^\top A \c} \\
+\partialop{c_2}{\c^\top A \c} \\
+\vdots \\
+\partialop{c_n}{\c^\top A \c}
+\end{bmatrix} = \begin{bmatrix}
+\vspace{5mm}
+\snmath a_{1i} c_i  + \sum_{j =  1}^n a_{j1} c_j \\
+\snmath a_{2i} c_i  + \sum_{j =  1}^n a_{j2} c_j \\
+\vdots \\
+\snmath a_{ni} c_i  + \sum_{j =  1}^n a_{jn} c_j
+\end{bmatrix} \\
+&= \begin{bmatrix}
+\vspace{5mm}
+\snmath a_{1i} c_i  \\
+\snmath a_{2i} c_i  \\
+\vdots \\
+\snmath a_{ni} c_i 
+\end{bmatrix} + \begin{bmatrix}
+\vspace{5mm}
+ \displaystyle \sum_{j =  1}^n a_{j1} c_j \\
+ \displaystyle\sum_{j =  1}^n a_{j2} c_j \\
+\vdots \\
+\displaystyle\sum_{j =  1}^n a_{jn} c_j
+\end{bmatrix} \\
+&= \underbrace{\begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\ 
+a_{n1} & a_{n2} & \cdots & a_{nn} \end{bmatrix}}_{A} \underbrace{\begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix}}_{\mathbf{c}} + \underbrace{\begin{bmatrix} a_{11} & a_{21} & \cdots & a_{n1} \\ a_{12} & a_{22} & \cdots & a_{n2} \\
+\vdots & \vdots & \ddots & \vdots \\ 
+a_{1n} & a_{2n} & \cdots & a_{nn} \end{bmatrix}}_{A^\top} \underbrace{\begin{bmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{bmatrix}}_{\mathbf{c}} 
+\end{align*}
+
+\vspace{3mm}
+
+Hence, 
+
+\[
+	\partialop{\c}{\c^\top A \c} = A \mathbf{c} + A^\top \mathbf{c} = \left( A + A^\top \right)\mathbf{c}.
+\]
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (b)
+%--------------------------------------------
+\easysubproblem{Given matrix $X \in \reals^{n \times (p+1)}$, full rank and first column consisting of the $\onevec_n$ vector, rederive the least squares solution $\b$ (the vector of coefficients in the linear model shipped in the prediction function $g$). No need to rederive the facts about vector derivatives.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+For the multivariate linear regression ($p > 1$), a.k.a. \emph{ordinary least squares} (OLS), we have the following:
+\begin{enumerate}
+ \item training data $\mathbb{D} =  \left\langle X, \mathbf{y} \right\rangle$ where 
+ \begin{itemize}
+ \item $X$ has a first column of $\onevec_n$
+ \item column vector of responses/labels: $\mathbf{y} = \begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix} $
+ \item column vector of predicted values: $ \hat{\mathbf{y}} = \begin{bmatrix} \hat{y}_1 \\ \vdots \\ \hat{y}_n \end{bmatrix} = X\mathbf{w}$
+ \end{itemize}
+ \item the set of candidate functions $\mathcal{H} = \lbrace \mathbf{x}^\top \mathbf{w} : \mathbf{w} \in \reals^{p+1} \rbrace$.
+ \end{enumerate}
+
+We have the \emph{\textbf{\underline{sum of squared errors}}} (SSE) that will be expressed in matrix/vector form: 
+\begin{align*}
+	\mathrm{SSE} = \sum_{i=1}^n e_i^2 &= \sum_{i=1}^n \left( y_i - \hat{y}_i \right)^2\\
+	&= \left( \mathbf{y} - \mathbf{\hat{y}} \right)^\top \left( \mathbf{y} - \mathbf{\hat{y}} \right)\\
+	&= \mathbf{y}^\top \mathbf{y} - 2 \mathbf{\hat{y}}^\top \mathbf{y} + \mathbf{\hat{y}}^\top \mathbf{\hat{y}} \\
+	&= \mathbf{y}^\top \mathbf{y} - 2 \mathbf{w}^\top X^\top \mathbf{y} + \mathbf{w}^\top X^\top X \mathbf{w}
+\end{align*}
+
+The goal behind OLS is to find $\b = \underset{\mathbf{w} \in \reals^{p+1}}{\argmin} \lbrace \mathrm{SSE} \rbrace$. Then, 
+\begin{align*}
+	\partialop{\mathbf{w}}{\mathrm{SSE}} \overset{set}{=} \mathbf{0}_{p+1}
+	&\implies \partialop{\mathbf{w}}{\mathbf{y}^\top \mathbf{y} - 2 \mathbf{w}^\top X^\top \mathbf{y} + \mathbf{w}^\top X^\top X \mathbf{w}} = \mathbf{0}_{p+1}\\
+	&\implies \partialop{\mathbf{w}}{\mathbf{y}^\top \mathbf{y}} - 2 \partialop{\mathbf{w}}{\mathbf{w}^\top X^\top \mathbf{y}} + \partialop{\mathbf{w}}{\mathbf{w}^\top X^\top X \mathbf{w}} = \mathbf{0}_{p+1}\\
+	&\implies - 2 X^\top \mathbf{y} + 2X^\top X \mathbf{w} = \mathbf{0}_{p+1}\\
+	&\implies X^\top X \mathbf{w} = X^\top \mathbf{y}\\
+	&\implies \mathbf{w} = \b = \left(X^\top X \right)^{-1} X^\top \mathbf{y} 
+\end{align*} 
+
+The unique solution $\b$ exists if $X^\top X$ is invertible $\Longleftrightarrow \rank{X} = p+1$.
+ 
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (c)
+%--------------------------------------------
+\intermediatesubproblem{Consider the case where $p = 1$. Show that the solution for $\b$ you just derived in (b) is the same solution that we proved for simple regression. That is, the first element of $\b$ is the same as $b_0 = \ybar - r \frac{s_y}{s_x}\xbar$ and the second element of $\b$ is $b_1 = r \frac{s_y}{s_x}$.} \spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+For $p = 1$, we have $X = \begin{bmatrix} 1 & x_1 \\ 2 & x_2 \\ \vdots & \vdots \\ 1 & x_n  \end{bmatrix} \implies X^\top = \begin{bmatrix} 1 & 1 & \cdots & 1 \\ x_1 & x_2 & \cdots & x_n \end{bmatrix}$ and $ \mathbf{y} = \begin{bmatrix}
+y_1 \\ y_2 \\ \vdots \\ y_n 
+\end{bmatrix}$.
+
+\vspace{2mm}
+
+The solution $\b$ for OLS is : $\b = \left(X^\top X\right)^{-1} X^\top \mathbf{y}$ Since $p=1$, $\b = \begin{bmatrix} \beta_0 \\ \beta_1 \end{bmatrix}$. \\ We first compute \Xtran: 
+\begin{align*}
+	X^\top X &= \begin{bmatrix} 1 & 1 & \cdots & 1 \\ x_1 & x_2 & \cdots & x_n \end{bmatrix}  \begin{bmatrix} 1 & x_1 \\ 2 & x_2 \\ \vdots & \vdots \\ 1 & x_n  \end{bmatrix} = \begin{bmatrix} n & \snmath x_i \\
+	\snmath x_i & \snmath x_i^2 \end{bmatrix}, \\
+	\Xtramath &= \dfrac{1}{n \snmath x_i^2 - \left( \snmath x_i \right)^2} \begin{bmatrix} \snmath x_i^2 & - \snmath x_i \\ - \snmath x_i & n \end{bmatrix}, X^\top \mathbf{y} = \begin{bmatrix} \snmath y_i \\ \snmath x_i y_i \end{bmatrix}
+\end{align*}
+
+Now we have, 
+\begin{align*}
+\b &= \bsolmath \\
+&= \dfrac{1}{n \snmath x_i^2 - \left( \snmath x_i \right)^2} \begin{bmatrix} \snmath x_i^2 & - \snmath x_i \\ - \snmath x_i & n \end{bmatrix} \begin{bmatrix} \snmath y_i \\ \snmath x_i y_i \end{bmatrix}\\
+&= \dfrac{1}{n \snmath x_i^2 - \left( n \bar{x} \right)^2} \begin{bmatrix} \snmath x_i^2 & - n \bar{x} \\ - n \bar{x} & n \end{bmatrix} \begin{bmatrix} n \bar{y} \\ \snmath x_i y_i \end{bmatrix} \\
+&= \dfrac{1}{n \left(  \snmath x_i^2 -  n \bar{x}^2 \right)} \begin{bmatrix} n \bar{y} \snmath x_i^2  - n \bar{x} \snmath x_i y_i  \\ - n^2 \bar{x} \bar{y} + n \snmath x_i y_i \end{bmatrix}
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (c) continued}: 
+
+\vspace{3mm}
+
+We first find $\beta_1:$
+
+\[
+	\beta_1 = \dfrac{- n^2 \bar{x} \bar{y} + n \snmath x_i y_i  }{n \left(  \snmath x_i^2 -  n \bar{x}^2 \right)} \implies \beta_1 = \dfrac{ \snmath x_i y_i - n \bar{x} \bar{y} }{ \snmath x_i^2 -  n \bar{x}^2 } = r \frac{s_y}{s_x}
+\]
+
+\vspace{3mm}
+
+Then we find $\beta_0:$
+
+\begin{align*}
+	\beta_0 &= \dfrac{ n \bar{y} \snmath x_i^2  - n \bar{x} \snmath x_i y_i  }{n \left(  \snmath x_i^2 -  n \bar{x}^2 \right)} \\
+	&= \dfrac{ \bar{y} \snmath x_i^2  - \bar{x} \snmath x_i y_i  }{   \snmath x_i^2 -  n \bar{x}^2 }\\
+	&= \dfrac{ \bar{y} \snmath x_i^2  \color{blue!200} - n\bar{y}\bar{x}^2 + n\bar{y}\bar{x}^2  \color{black}  - \bar{x} \snmath x_i y_i  }{   \snmath x_i^2 -  n \bar{x}^2 }\\
+	&= \bar{y} \dfrac{  \cancel{\left(  \snmath x_i^2   - n\bar{x}^2   \right)}}{ \cancel{ \snmath x_i^2 -  n \bar{x}^2 } } + \dfrac{   n\bar{y}\bar{x}   -  \snmath x_i y_i  }{   \snmath x_i^2 -  n \bar{x}^2 } \cdot \bar{x} \\
+	&= \bar{y} - \left( \dfrac{\snmath x_i y_i - n\bar{x}\bar{y}}{ \snmath x_i^2 -  n \bar{x}^2} \right) \cdot \bar{x} \implies \beta_0 = \bar{y} - \beta_1 \bar{x}
+\end{align*}
+
+Hence, $\beta_0 = \ybar - r \frac{s_y}{s_x} \xbar$ and $\beta_1 = r \frac{s_y}{s_x}$. \quad $\blacksquare$
+
+\end{tcolorbox}
+
+\newpage
+
+%--------------------------------------------
+% Part (d)
+%--------------------------------------------
+\easysubproblem{If $X$ is rank deficient, how can you solve for $\b$? Explain in English.} \spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+If $X$ is rank deficient I think what we can do is to find the redundancies in the columns, by finding its \emph{reduced row echelon form}, and discard them until $X$ is of full column rank and then proceed with the least squares algorithm as per usual. 
+
+\end{tcolorbox}
+
+%--------------------------------------------
+% Part (e)
+%--------------------------------------------
+\hardsubproblem{Prove $\rank{X} =\rank{X^\top X}$.}\spc{9}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+\vspace{2mm}
+
+Let $X \in \reals^{n \times (p+1)}$ and so $X^\top X \in \reals^{(p+1) \times (p+1)}$. 
+
+\vspace{2mm}
+
+Suppose $\mathbf{v} \in \mathrm{null}(X)$, i.e., $ X\mathbf{v} = \mathbf{0}_n$. We can easily see that $X^\top X \mathbf{v} = \mathbf{0}_{p+1}$, and so $\mathbf{v} \in \mathrm{null}(X^\top X)$. As a result, $\mathrm{null}(X) \subset \mathrm{null}(X^\top X)$. 
+
+\vspace{2mm}
+
+Now suppose, $\mathbf{v} \in \mathrm{null}(X^\top X)$, i.e., $ X^\top X\mathbf{v} = \mathbf{0}_{p+1}$ 
+\begin{align*}
+&\implies \mathbf{v}^\top \left( A^\top A \mathbf{v} \right) = v^\top \mathbf{0}_{p+1} \\ 
+&\implies \left( \mathbf{v}^\top A^\top \right) A  \mathbf{v}  = v^\top \mathbf{0}_{p+1} \\
+&\implies (A\mathbf{v})^\top \left( A\mathbf{v} \right) = \mathbf{0}_{p+1} \\
+&\implies \norm{A\mathbf{v}}^2 = 0 \implies \norm{A\mathbf{v}} = 0\\
+&\implies A \mathbf{v} = 0 \implies \mathbf{v} \in \mathrm{null}(X)\\
+&\implies \mathrm{null}(X^\top X) \subset \mathrm{null}(X). 
+\end{align*}
+Hence, $\mathrm{null}(X) = \mathrm{null}(X^\top X) \implies \dim(\mathrm{null}(X)) = \dim(\mathrm{null}(X^\top X))$. 
+
+We know that the \# of columns of $X$ $=$ \# of columns of $X^\top X = p+1$. 
+
+By the rank-nullity theorem, 
+\[
+	\rank{X} + \dim(\mathrm{null}(X)) = p+1
+\]
+and, 
+\[
+	\rank{X^\top X} + \dim(\mathrm{null}(X^\top X)) = p+1
+\]
+
+Therefore, $\rank{X} = \rank{X^\top X}. \quad \blacksquare$
+\end{tcolorbox}
+
+
+\newpage
+%--------------------------------------------
+% Part (f)
+%--------------------------------------------
+\intermediatesubproblem{[MA] If $p=1$, prove $r^2 = R^2$ i.e. the linear correlation is the same as proportion of sample variance explained in a least squares linear model.}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+In simple OLS ($p = 1$) the optimal weights for the ``\emph{line of best fit}'' are: \\ $\beta_0 = \bar{y} - \beta_1 \bar{x}$, $\beta_1 =\dfrac{ \displaystyle \sum_{i=1}^n x_i y_i - n \bar{x}\bar{y}}{ \displaystyle \sum_{i=1}^n x_i^2 - n\bar{x}^2} = \dfrac{r s_y}{s_x} \Rightarrow \displaystyle \sum_{i=1}^n x_i y_i - n \bar{x}\bar{y} = \beta_1 \left( \sum_{i=1}^n x_i^2 - n\bar{x}^2 \right) $. 
+
+$\underbrace{R^2}_{(\textbf{\underline{coefficient of determination}})} = \dfrac{\mathrm{SST} - \mathrm{SSE}}{\mathrm{SST}}  = \dfrac{\displaystyle \sum_{i=1}^n \left( y_i - \bar{y} \right)^2 - \sum_{i=1}^n \left(y_i- \hat{y}_i \right)^2}{\displaystyle \sum_{i=1}^n \left(y_i - \bar{y} \right)^2}$. 
+
+Simplifying the numerator we find that:
+\begin{align*}
+	\mathrm{SST} - \mathrm{SSE} &= \sum_{i=1}^n \left( y_i - \bar{y} \right)^2 - \sum_{i=1}^n \left(y_i- \hat{y}_i \right)^2\\
+	&= \sum_{i=1}^n \cancel{y_i^2} - 2y_i \bar{y} + \bar{y}^2 - \cancel{y_i^2} + 2y_i \hat{y}_i - \hat{y}_i^2\\
+	&= -2n\bar{y}^2 + n\bar{y}^2 + \sum_{i=1}^n 2y_i \left( \bar{y} - \beta_1 \bar{x} + \beta_1 x_i \right) - \sum_{i=1}^n \hat{y}_i^2 \\
+	&= \color{magenta} -n\bar{y}^2 + \sum_{i=1}^n (2y_i\bar{y} - 2\beta_1 \bar{x} y_i + 2\beta_1 x_i y_i) \color{black} - \color{blue!200} \sum_{i=1}^n \hat{y}_i^2 \color{black}
+\end{align*}
+
+Now we expand and simplify the expression: 
+\begin{align*}
+	\color{blue!200} \sum_{i=1}^n \hat{y}_i^2 \color{black} = \sum_{i=1}^n \left( \beta_0 + \beta_1 x_i \right)^2 
+	&= \sum_{i=1}^n (\beta_0^2 + 2 \beta_0 \beta_1 x_i + \beta_1^2 x_i^2) \\
+	&= n \beta_0^2 + 2n \beta_0 \beta_1 \bar{x} + \beta_1^2 \sum_{i=1}^n x_i^2 \\
+	&= n\left( \bar{y} - \beta_1 \bar{x} \right)^2 + 2n\left( \bar{y} - \beta_1 \bar{x} \right) \beta_1 \bar{x} + \beta_1^2 \sum_{i=1}^n x_i \\
+	&= n(\bar{y}^2 - 2\beta_1 \bar{x} \bar{y} + \beta_1^2 \bar{x}^2) + 2\beta_1 n \bar{x} \bar{y} - 2\beta_1^2 n\bar{x}^2 + \beta_1^2 \sum_{i=1}^n x_i^2 \\
+	&= \color{blue!200} n \bar{y}^2 - 2 \beta_1 n \bar{x} \bar{y} + n \beta_1^2 \bar{x}^2 + 2 \beta_1 n \bar{x} \bar{y} - 2 \beta_1^2 n \bar{x}^2 + \beta_1^2 \sum_{i=1}^n x_i^2 \color{black}
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage 
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (f) continued}: 
+
+\vspace{3mm}
+
+Now we incorporate the expressions found to further simplify: 
+\begin{align*}
+ \mathrm{SST} - \mathrm{SSE} &= \color{magenta} -n\bar{y}^2 + \sum_{i=1}^n (2y_i\bar{y} - 2\beta_1 \bar{x} y_i + 2\beta_1 x_i y_i) \color{black} \\
+ &- \left( \color{blue!200} n \bar{y}^2 - 2 \beta_1 n \bar{x} \bar{y} + n \beta_1^2 \bar{x}^2 + 2 \beta_1 n \bar{x} \bar{y} - 2 \beta_1^2 n \bar{x}^2 + \beta_1^2 \sum_{i=1}^n x_i^2 \color{black}  \right) \\
+ &= \color{green} \cancel{-n\bar{y}^2} + \cancel{2n\bar{y}^2} \color{black} - \color{orange} \cancel{2 \beta_1 n \bar{x} \bar{y}} \color{black}  + 2 \beta_1 \sum_{i=1}^n x_i y_i - \color{green} \cancel{n \bar{y}^2} \color{black} + \color{orange} \cancel{2 \beta_1 n \bar{x} \bar{y}} \color{black} \\
+ &- n\beta_1^2 \bar{x}^2 - 2\beta_1 n \bar{x} \bar{y} + 2 \beta_1^2 n \bar{x}^2 - \beta_1^2 \sum_{i=1}^n x_i^2 \\
+ &= \color{magenta} 2 \beta_1 \sum_{i=1}^n x_i y_i \color{black} - \color{blue!200} n \beta_1^2 \bar{x}^2 \color{black} - \color{magenta} 2 \beta_1 n \bar{x} \bar{y} \color{black} + \color{blue!200} 2 \beta_1^2 n \bar{x}^2 \color{black} - \beta_1^2 \sum_{i=1}^n x_i^2 \\
+ &= \color{magenta} 2\beta_1 \left( \sum_{i=1}^n x_i y_i - n \bar{x} \bar{y} \right) \color{black} + \color{blue!200} \beta_1^2 n \bar{x}^2  \color{black} - \beta_1^2 \sum_{i=1}^n x_i^2 \\
+ &= 2 \beta_1 \left( \beta_1 \sum_{i=1}^n x_i^2 - n \bar{x}^2 \right) + \beta_1^2 n \bar{x}^2 - \beta_1^2 \sum_{i=1}^n x_i^2 \\
+ &= 2 \beta_1^2 \sum_{i=1}^n x_i^2 - 2\beta_1^2 n \bar{x}^2 + \beta_1^2 n \bar{x}^2 - \beta_1^2 \sum_{i=1}^n x_i^2 \\
+ &=  \beta_1^2 \sum_{i=1}^n x_i^2 - \beta_1^2 n \bar{x}^2 = \beta_1^2 \left( \sum_{i=1}^n x_i^2 - n \bar{x}^2 \right) = \beta_1^2 \left( \sum_{i=1}^n (x_i - \bar{x})^2 \right)
+\end{align*}
+
+We return to the \textbf{\underline{coefficient of determination}}:
+\begin{align*}
+R^2 = \dfrac{\mathrm{SST - SSE}}{SST} &= \beta_1^2 \cdot \dfrac{ \displaystyle \sum_{i=1}^n (x_i - \bar{x})^2 }{\displaystyle \sum_{i=1}^n \left(y_i - \bar{y} \right)^2} \\
+&= \left( \dfrac{r s_y}{s_x} \right)^2 \cdot \dfrac{(n-1)s_x^2}{(n-1)s_y^2} \\
+&= \dfrac{r^2 \cancel{s_y}^2}{\cancel{s_x^2}} \cdot \dfrac{\cancel{(n-1)s_x^2}}{\cancel{(n-1)s_y^2}} = r^2
+\end{align*}
+
+Thus, in simple linear regression, the coefficient of determination is equal to the correlation coefficient squared, i.e., $R^2 = r^2. \quad \blacksquare$
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (g)
+%--------------------------------------------
+\intermediatesubproblem{Prove that $g(\bracks{1 ~\xbar_1~ \xbar_2~ \ldots~ \xbar_p}) =\bar{y}$ in OLS.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+In general, a residual $e_i = y_i - \hat{y}_i \implies y_i = \hat{y}_i + e_i, \,  \forall i \in \lbrace 1, \ldots, n \rbrace.$ 
+
+\vspace{2mm}
+
+In OLS, $\b = \underset{\mathbf{w} \in \reals^{p+1}}{\argmin} \lbrace \mathrm{SSE} \rbrace$, namely $\b = \begin{bmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_{p} \end{bmatrix}$ and $ \hat{\mathbf{y}}= g(\mathbf{x}) = X\b \hspace{3mm} (\hat{y}_i = \mathbf{x}_{i \cdot}^{T}\b)$.
+
+We can view this all as a system of $n$ linear equations:
+
+\[
+	\begin{cases}
+	\beta_0 + \beta_1 x_{11} + \beta_2 x_{12} + \cdots  + \beta_p x_{1p} + e_1 = y_1\\
+	\beta_0 + \beta_1 x_{21} + \beta_2 x_{22} + \cdots  + \beta_p x_{2p} + e_2 = y_2\\
+	\hspace{2mm} \vdots \hspace{10mm} \vdots \hspace{12mm} \vdots \hspace{10mm} \ddots \hspace{10mm} \vdots \hspace{9mm} \vdots \hspace{8mm} \vdots \\
+	\beta_0 + \beta_1 x_{n1} + \beta_2 x_{n2} + \cdots + \beta_p x_{np} + e_n = y_n
+	\end{cases}
+\]
+
+\vspace{2mm}
+
+Summing up the $n$ linear equations, we get: 
+
+\[
+	n\beta_0 + \beta_1 \sum_{i=1}^n x_{i1} + \beta_2 \sum_{i=1}^n x_{i2} + \cdots + \beta_p \sum_{i=1}^n x_{ip} + \sum_{i=1}^n e_i = \sum_{i=1}^n y_i
+\]
+
+From Problem \#6 part(h) we know that $ \displaystyle \sum_{i=1}^n e_i = 0$. So we now have, 
+
+\[
+	n\beta_0 + \beta_1 \sum_{i=1}^n x_{i1} + \beta_2 \sum_{i=1}^n x_{i2} + \cdots + \beta_p \sum_{i=1}^n x_{ip}  = \sum_{i=1}^n y_i
+\]
+
+We can express $ \displaystyle \sum_{i=1}^n x_{ik} = n \bar{x}_k, \, \forall k \in \lbrace 1, 2, \ldots, p \rbrace$ and we get, 
+
+\[
+	n\beta_0 + \beta_1 n \bar{x}_1  + \beta_2 n \bar{x}_2 + \cdots + \beta_p n \bar{x}_p  = \sum_{i=1}^n y_i. 
+\]
+
+Dividing by $n$ gives the desired result, 
+
+\[
+	\beta_0 + \beta_1 \bar{x}_1  + \beta_2 \bar{x}_2 + \cdots + \beta_p \bar{x}_p  = \dfrac{1}{n} \cdot \sum_{i=1}^n y_i = \bar{y}
+\]
+
+because then $g(\bracks{1 ~\xbar_1~ \xbar_2~ \ldots~ \xbar_p}) =\bar{y} \quad \blacksquare$
+
+\end{tcolorbox}
+
+\newpage
+%--------------------------------------------
+% Part (h)
+%--------------------------------------------
+\intermediatesubproblem{Prove that $\bar{e} = 0$ in OLS.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+From Problem \#6, part(b) we know that the solution $\b$ of OLS satisfies the equation $ X^\top \mathbf{y} - X^\top X \b = \mathbf{0} \implies X^\top \left(\mathbf{y} - X \b  \right) = \mathbf{0}$. 
+
+We know that,  
+\[
+X^\top = \begin{bmatrix} 1 & 1 & \cdots & 1 \\
+x_{11} & x_{21}& \cdots & x_{n1} \\ x_{12} & x_{22} & \cdots & x_{n2} \\ \vdots & \vdots & \ddots & \vdots \\ x_{1p} & x_{2p} & \cdots & x_{np} \end{bmatrix},
+\] 
+and that, 
+\[
+	\mathbf{y} - X \b  = \begin{bmatrix} y_1 - x_{1 \cdot}^\top \b \\ y_2 - x_{2 \cdot}^\top \b \\ \vdots \\ y_n - x_{n \cdot}^\top \b \end{bmatrix}.
+\]
+
+Now consider how we get the first entry of the matrix product $ X^\top \left(\mathbf{y} - X \b  \right) = \mathbf{0}$. 
+
+The dot product of the first row of $X^\top$ with the column vector 
+$\mathbf{y} - X \b$ gives us, 
+
+\[
+	\sum_{i = 1}^n \left( y_i - x_{i \cdot}^\top \b \right) =0 \implies \sum_{i = 1}^n \left( y_i - \hat{y}_i \right) = 0 \implies \sum_{i=1}^n e_i = 0 \implies \bar{e} = 0 \quad \blacksquare
+\]
+
+\end{tcolorbox}
+
+\newpage
+
+%--------------------------------------------
+% Part (i)
+%--------------------------------------------
+\hardsubproblem{If you model $\y$ with one categorical nominal variable that has levels $A, B, C$, prove that the OLS estimates look like $\ybar_A$ if $x = A$, $\ybar_B$ if $x = B$ and $\ybar_C$ if $x = C$. You can choose to use an intercept or not. Likely without is easier.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+We are given a model $\y$ with one categorical nominal variable with three levels $A, B, C$. We will use the solution $\b$ to the OLS to show the estimates to look like $\ybar_A$ if $x = A$, $\ybar_B$ if $x = B$ and $\ybar_C$ if $x = C$.  
+
+\vspace{2mm}
+
+For our OLS problem, $p = 2$ and the prediction model will be: \[
+\hat{y} = g(x_1, x_2) = \beta_0 + \beta_1 x_1 + \beta_2 x_2,\text{ where  }\b = \left(X^\top X \right)^{-1} X^\top \mathbf{y} = \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \end{bmatrix}.
+\] 
+
+For our single categorical nominal variable $\y$ with three levels $A, B, C$ we have: 
+
+\begin{itemize}
+\item $n_i =$ total \# of training data with level $i \in \lbrace A, B, C \rbrace $
+\item $x_1 =  \indic{B}, x_2 = \indic{C} \implies  \snmath x_{i1} = \nb, \, \snmath x_{i2} = \nc, \,  \snmath x_{i1} x_{i2} = 0$
+\item $n = \na + \nb + \nc $ and $n \ybar = \na\ybar_A + \nb \ybar_B + \nc \ybar_C$
+\end{itemize}
+
+Our training set $X$ with response vector $\mathbf{y}$ are the following: 
+
+\[
+	X = \begin{bmatrix} 1 & x_{11} & x_{12}\\
+	1 & x_{21} & x_{22} \\ 
+	\vdots & \vdots & \vdots \\
+	1 & x_{n1} & x_{n2} \end{bmatrix}, \quad \mathbf{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}.
+\]
+
+We will compute $X^\top X$:
+\begin{align*}
+	X^\top X &= \begin{bmatrix} 1 & 1 & \cdots & 1 \\ 
+	x_{11} & x_{21} & \cdots & x_{n1} \\ x_{12} & x_{22} & \cdots & x_{n2} \end{bmatrix} \begin{bmatrix} 1 & x_{11} & x_{12}\\
+	1 & x_{21} & x_{22} \\ 
+	\vdots & \vdots & \vdots \\
+	1 & x_{n1} & x_{n2} \end{bmatrix} \\
+	&= \begin{bmatrix} n & \snmath x_{i1} & \snmath x_{i2} \\
+	\snmath x_{i1} & \snmath x_{i1}^2 & \snmath x_{i1} x_{i2} \\
+	\snmath x_{i2} & \snmath x_{i2} x_{i1} & \snmath x_{i2}^2
+	\end{bmatrix} = \begin{bmatrix} n & \nb & \nc \\
+	\nb & \nb & 0 \\
+	\nc & 0 & \nc \end{bmatrix}
+\end{align*}
+
+
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (i) continued}: 
+
+\vspace{2mm}
+
+We will compute the inverse $ \left( X^\top X \right)^{-1} = \dfrac{1}{\mathrm{det}(X^\top X)} \cdot \mathrm{adj}(X^\top X)$
+
+First, we find the adjoint matrix: 
+
+\[
+	\mathrm{adj}(X^\top X) = \begin{bmatrix} \nb \cdot \nc & - \nb \cdot \nc  & - \nb \cdot \nc  \\ - \nb \cdot \nc  & n \cdot \nc - \nc^2 & \nb \cdot \nc  \\
+	- \nb \cdot \nc  & \nb \cdot \nc & n \cdot \nb - \nb^2   \end{bmatrix}. 
+\]
+
+We compute $\mathrm{det}(X^\top X)$ by using the trick for $3 \times 3$ matrices to get:
+\begin{align*}
+	\mathrm{det}(X^\top X) &= \left( n \cdot \nb \cdot \nc \right) - \left( \nc^2 \cdot \nb + \nb^2 \cdot \nc \right) \\
+	&= \nb \cdot \nc \left( n - \nb - \nc \right) = \na \nb \nc 
+\end{align*}
+
+We have the inverse: 
+\begin{align*}
+	\left( X^\top X \right)^{-1} &= \dfrac{1}{\mathrm{det}(X^\top X)} \cdot \mathrm{adj}(X^\top X) \\
+	&= \dfrac{1}{\na \nb \nc} \begin{bmatrix} \nb \cdot \nc & - \nb \cdot \nc  & - \nb \cdot \nc  \\ - \nb \cdot \nc  & n \cdot \nc - \nc^2 & \nb \cdot \nc  \\
+	- \nb \cdot \nc  & \nb \cdot \nc & n \cdot \nb - \nb^2   \end{bmatrix}
+\end{align*}
+
+We also find $X^\top \mathbf{y}$:
+
+\[
+	X\top \mathbf{y} = \begin{bmatrix} 1 & 1 & \cdots & 1 \\ 
+	x_{11} & x_{21} & \cdots & x_{n1} \\ x_{12} & x_{22} & \cdots & x_{n2} \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix} = \begin{bmatrix} \snmath y_i \\
+	\snmath x_{i1} y_i \\
+	\snmath x_{i2} y_i \end{bmatrix} = \begin{bmatrix} n\ybar \\ \nb \ybar_B \\
+	\nc \ybar_C \end{bmatrix}
+\]
+
+We now compute $\b = \left(X^\top X \right)^{-1} X^\top \mathbf{y}$:
+
+\begin{align*}
+	\b &= \dfrac{1}{\na \nb \nc} \begin{bmatrix} \nb \cdot \nc & - \nb \cdot \nc  & - \nb \cdot \nc  \\ - \nb \cdot \nc  & n \cdot \nc - \nc^2 & \nb \cdot \nc  \\
+	- \nb \cdot \nc  & \nb \cdot \nc & n \cdot \nb - \nb^2   \end{bmatrix} \begin{bmatrix} n\ybar \\ \nb \ybar_B \\
+	\nc \ybar_C \end{bmatrix} \\
+	&= \dfrac{1}{\na \nb \nc} \begin{bmatrix}
+	\nb \nc n \ybar - \nb^2 \nc \ybar_B - \nb \nc^2 \ybar_C \\
+	-\nb \nc n \ybar + (n \cdot \nc - \nc^2) \nb \ybar_B + \nb \nc^2 \ybar_C \\
+	 -\nb \nc n \ybar + \nb^2 \nc \ybar_B + (\nb \cdot  n - \nb^2) \nc \ybar_C
+	\end{bmatrix} \\
+	&= \dfrac{1}{\na} \begin{bmatrix}
+	 n \ybar - \nb  \ybar_B -  \nc \ybar_C \\
+	- n \ybar + (n  - \nc)  \ybar_B +  \nc \ybar_C \\
+	 - n \ybar + \nb  \ybar_B +  (n - \nb) \ybar_C
+	\end{bmatrix}
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\underline{Part (i) continued}: 
+
+\vspace{2mm}
+
+We will find the components of $\b$:
+
+\begin{itemize}
+\item for $\beta_0$:
+\[
+\beta_0 = \dfrac{n \ybar - \nb  \ybar_B -  \nc \ybar_C}{\na} = \dfrac{\cancel{\na} \ybar_A}{\cancel{\na}} = \ybar_A, 
+\]
+
+\item for $\beta_1$:
+\begin{align*}
+	\beta_1 &= \dfrac{- n \ybar + (n  - \nc)  \ybar_B +  \nc \ybar_C }{\na} \\
+	 &= \dfrac{- \na \ybar_A  - \cancel{\nb \ybar_B} - \cancel{\nc \ybar_C} + \na \ybar_B + \cancel{\nb \ybar_B} +  \cancel{\nc \ybar_C} }{\na} \\
+	 &= \dfrac{\cancel{\na} (\ybar_B - \ybar_A)}{\cancel{\na}} = \ybar_B - \ybar_A
+\end{align*}
+
+\item for $\beta_2$:
+\begin{align*}
+	\beta_2 &= \dfrac{- n \ybar + \nb  \ybar_B +  (n - \nb) \ybar_C }{\na} \\
+	 &= \dfrac{- \na \ybar_A  - \cancel{\nb \ybar_B} - \cancel{\nc \ybar_C} + \cancel{\nb \ybar_B} + \na \ybar_C +  \cancel{\nc \ybar_C} }{\na} \\
+	 &= \dfrac{\cancel{\na} (\ybar_C - \ybar_A)}{\cancel{\na}} = \ybar_C - \ybar_A
+\end{align*}
+\end{itemize}
+
+We finally have our desired result, 
+
+\[
+	\hat{y} = g(x_1, x_2) = \ybar_A + (\ybar_B - \ybar_A) x_1 + (\ybar_C - \ybar_A) x_2 .
+\]
+
+\vspace{3mm}
+
+\end{tcolorbox}
+
+\newpage
+
+%--------------------------------------------
+% Part (j)
+%--------------------------------------------
+\intermediatesubproblem{[MA] Prove that the OLS model always has $R^2 \in \zeroonecl$.}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+We know that the coefficient of determination $R^2$ is defined as: 
+
+\[
+	R^2 = 1 - \dfrac{\mathrm{SSE}}{\mathrm{SST}}
+\]
+
+We know that $\mathrm{SST} = \snmath (y_i - \ybar)^2 $ and $\mathrm{SSE} = \snmath (y_i - \hat{y}_i)^2$. The very goal of the OLS algorithm is to minimize SSE and so SSE $\leq$ SST by definition of the algorithm implemented. It then follows that,
+
+\[
+	\mathrm{SSE} \leq \mathrm{SST} \implies R^2 = 1 - \dfrac{\mathrm{SSE}}{\mathrm{SST}} \in [0,1]. \quad \blacksquare
+\]
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+
+
+\end{document}
+
