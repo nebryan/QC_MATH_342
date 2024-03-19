@@ -1,0 +1,608 @@
+\documentclass[12pt]{article}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+
+\include{preamble}
+
+\newtoggle{professormode}
+%\toggletrue{professormode} %STUDENTS: DELETE or COMMENT this line
+
+
+
+\title{MATH 342W / 642 Spring \the\year ~Homework \#3}
+
+\author{Bryan Nevarez} %STUDENTS: write your name here
+
+\iftoggle{professormode}{
+\date{Due 11:59PM March 17 \\ \vspace{0.5cm} \small (this document last updated \currenttime~on \today)}
+}
+
+\renewcommand{\abstractname}{Instructions and Philosophy}
+
+\begin{document}
+\maketitle
+
+\iftoggle{professormode}{
+\begin{abstract}
+The path to success in this class is to do many problems. Unlike other courses, exclusively doing reading(s) will not help. Coming to lecture is akin to watching workout videos; thinking about and solving problems on your own is the actual ``working out.''  Feel free to \qu{work out} with others; \textbf{I want you to work on this in groups.}
+
+Reading is still \textit{required}. You should be googling and reading about all the concepts introduced in class online. This is your responsibility to supplement in-class with your own readings.
+
+The problems below are color coded: \ingreen{green} problems are considered \textit{easy} and marked \qu{[easy]}; \inorange{yellow} problems are considered \textit{intermediate} and marked \qu{[harder]}, \inred{red} problems are considered \textit{difficult} and marked \qu{[difficult]} and \inpurple{purple} problems are extra credit. The \textit{easy} problems are intended to be ``giveaways'' if you went to class. Do as much as you can of the others; I expect you to at least attempt the \textit{difficult} problems. 
+
+This homework is worth 100 points but the point distribution will not be determined until after the due date. See syllabus for the policy on late homework.
+
+Up to 7 points are given as a bonus if the homework is typed using \LaTeX. Links to instaling \LaTeX~and program for compiling \LaTeX~is found on the syllabus. You are encouraged to use \url{overleaf.com}. If you are handing in homework this way, read the comments in the code; there are two lines to comment out and you should replace my name with yours and write your section. The easiest way to use overleaf is to copy the raw text from hwxx.tex and preamble.tex into two new overleaf tex files with the same name. If you are asked to make drawings, you can take a picture of your handwritten drawing and insert them as figures or leave space using the \qu{$\backslash$vspace} command and draw them in after printing or attach them stapled.
+
+The document is available with spaces for you to write your answers. If not using \LaTeX, print this document and write in your answers. I do not accept homeworks which are \textit{not} on this printout. Keep this first page printed for your records.
+
+\end{abstract}
+
+\thispagestyle{empty}
+\vspace{1cm}
+NAME: \line(1,0){380}
+\clearpage
+}
+
+%================================================================
+% PROBLEM #1: Nate Silver's Book (Chapter 4-6)
+%================================================================
+
+\problem{These are questions about Silver's book, chapters 4-6.  For all parts in this question, answer using notation from class (i.e. $t ,f, g, h^*, \delta, \epsilon, e, t, z_1, \ldots, z_t, \mathbb{D}, \mathcal{H}, \mathcal{A}, \mathcal{X}, \mathcal{Y}, X, y, n, p, x_{\cdot 1}, \ldots, x_{\cdot p}$, $x_{1 \cdot}, \ldots, x_{n \cdot}$, etc.} % and also we now have $f_{pr}, h^*_{pr}, g_{pr}, p_{th}$, etc from probabilistic classification as well as different types of validation schemes)
+
+\begin{enumerate}
+
+%-----------------------------------------------------------------
+% Part (a)
+%-----------------------------------------------------------------
+\hardsubproblem{Chapter 4 is all about predicting weather. Broadly speaking, what is the problem with weather predictions? Make sure you use the framework and notation from class. This is not an easy question and we will discuss in class. Do your best.}\spc{6}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Though ignorance error is not an issue in weather prediction due to the plethora of data points, $x_{1 \cdot}, \ldots, x_{n \cdot}$, that can be acquired to make weather predictions, much misspecification and estimation error may abound in finding the optimal model function for the weather, $g$. An algorithm $\mathcal{A}$ that meteorologists have employed in the past entails dividing up a specific geographic area of interest into a lattice or a grid where each specific square and solved chemical equations to figure out the temperature, barometric pressures, wind speeds, etc. One problem with this algorithm is that it is computationally expensive to completely solve all of the equations. Nonetheless, the algorithm is fundamentally flawed because of its oversimplification of the reality that the air above the ground does not exist in a two-dimensional plane but in a three-dimensional space which explains why weather predictions based upon this model do not fare well with predictions of future weather. Other two main reasons for difficulty of weather prediction is due to chaos theory, the dynamical nature of weather, and nonlinear systems that describe weather. 
+
+\end{tcolorbox}
+
+
+%-----------------------------------------------------------------
+% Part (b)
+%-----------------------------------------------------------------
+\easysubproblem{Why does the weatherman lie about the chance of rain? And where should you go if you want honest forecasts?}\spc{2}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+According to Silver, metereologists at the Weather Channel, tend to exaggerate the chance of rain due to economic incentives. Weathermen from local news networks often would ``\emph{presentation take precedence over accuracy}.'' Silver suggests going to the \emph{National Weather Service}'s forecasts on rain/precipitation as they are, according to him, very well \emph{calibrated}.
+
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (c)
+%-----------------------------------------------------------------
+\hardsubproblem{Chapter 5 is all about predicting earthquakes. Broadly speaking, what is the problem with earthquake predictions? It is \textit{not} the same as the problem of predicting weather. Read page 162 a few times. Make sure you use the framework and notation from class.}\spc{5}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Modeling of the weather is more robust than with predicting earthquakes because the very nature of the phenomenon of weather can be explained by first principles meaning that we have a better idea of the proximal causes for weather, $z_1, \cdots, z_n$ and meterologists have a very good idea of the relevant proxies $x_{ \cdot 1}, \cdots, x_{\cdot p}$ to base weather models upon. However, with earthquakes, seismologists do not have a good understanding of neither the proximal causes nor the proxies. Seismologists cannot gather data on the stress being experienced by bedrock within the depths of the Earth the same way that meteorologists can obtain data from the air above which is way more accessible. The data acquired from seismologists most of the time is \emph{noisey} coming from purely statistical methods instead from observable and empirical data.
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (d)
+%-----------------------------------------------------------------
+\easysubproblem{Silver has quite a whimsical explanation of overfitting on page 163 but it is really educational! What is the nonsense predictor in the model he describes?}\spc{2}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+On page 163, Silver described \emph{overfitting} with the scenario of figuring out the specific combinations of three differently colored locks and then generalizing that you can open other locks based upon the colors of these three locks, namely, red, black and blue. The nonsense predictor in the model was figuring out how to open the lock with a specific combination based upon the color of the lock.
+I also would like to highlight that I think Silver gave a really nice explanation of what overfitting is with these two phrases: 1) ``\emph{an overly specific solution to a general problem}'', and 2) ``\emph{it makes our model look better on paper but perform worse in the real world}.'' 
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (e)
+%-----------------------------------------------------------------
+\easysubproblem{John von Neumann was credited with saying that \qu{with four parameters I can fit an elephant and with five I can make him wiggle his trunk}. What did he mean by that and what is the message to you, the budding data scientist? }\spc{5}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+Neumann was being facetious with this analogy of ``fitting'' an elephant with four to five parameters. The point he is making with this tongue-in-cheek metaphor is to say that the inclination for many forecasters to use a wide array of statistical methods can actually turn out to be producing nonsensical results and deceptive true performance of prediction. In a sense, Neumann was saying that if we do are not honest with the way we formulate and validate our models we can fit almost anything -- even an elephant. 
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (f)
+%-----------------------------------------------------------------
+\hardsubproblem{Chapter 6 is all about predicting unemployment, an index of macroeconomic performance of a country. Broadly speaking, what is the problem with unemployment predictions? It is \textit{not} the same as the problem of predicting weather or earthquakes. Make sure you use the framework and notation from class.}\spc{6}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+One major difference with the drawbacks regarding predicting unemployment versus weather and earthquake prediction is the inherent \emph{non-stationary} nature of the economic processes that affect unemployment, i.e., the proximal causes $z_1, \ldots, z_t$ the underlie this phenomenon is always changing and the several economic variables may change over time. 
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (g)
+%-----------------------------------------------------------------
+\extracreditsubproblem{Many times in this chapter Silver says something on the order of \qu{you need to have theories about how things function in order to make good predictions.} Do you agree? Discuss.}\spc{13}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+
+\end{tcolorbox}
+
+\end{enumerate}
+
+\newpage
+%================================================================
+% PROBLEM #2: ORTHOGONAL PROJECTION/QR DECOMPOSITION/LEAST SQUARES
+%================================================================
+\problem{These are questions related to the concept of orthogonal projection, QR decomposition and its relationship with least squares linear modeling.}
+
+\begin{enumerate}
+
+%-----------------------------------------------------------------
+% Part (a)
+%-----------------------------------------------------------------
+\easysubproblem{Let $\H$ be the orthogonal projection onto $\colsp{\X}$ where $\X$ is a $n \times (p+1)$ matrix with all columns linearly independent from each other. What is $\rank{\H}$?}\spc{0.5}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+With the assumption that $p << n$, we know that since matrix $\X$ has $p+1$ linearly independent columns, then $\rank{\H} = p+1$.
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (b)
+%-----------------------------------------------------------------
+\easysubproblem{Simplify $\H\X$ by substituting for $\H$.}\spc{0.5}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+\[
+\H\X = \underbrace{\X(\X^T \X)^{-1} \X^T}_{\H} \X = \X \underbrace{(\X^T \X)^{-1} \X^T \X }_{I_n} = \X I_n = \X
+\]
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (c)
+%-----------------------------------------------------------------
+\intermediatesubproblem{What does your answer from the previous question mean conceptually?}\spc{2}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Conceptually, $\H \X$ means that we are projecting $\X$ onto its own column space. Since the columns of $X$ already exist in its column space, then $\H \X = \X$.
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (d)
+%-----------------------------------------------------------------
+\hardsubproblem{Let $\X'$ be the matrix of $\X$ whose columns are in reverse order meaning that $\X = [ \onevec_n~|~\x_{\cdot 1}~|~ \ldots~|~ \x_{\cdot p} ]$ and $\X' = [\x_{\cdot p}~|~ \ldots~|~\x_{\cdot 1}~|~\onevec_n]$. Show that the projection matrix that projects onto $\colsp{X}$ is the same exact projection matrix that projects onto $\colsp{X'}$.}\spc{4}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Let $E = [ \mathbf{e}_{p+1}~|~\mathbf{e}_p~|~ \cdots ~|~\mathbf{e}_2~|~\mathbf{e}_1 ]$. Then, $\X E = \X'$. Also, $E^{-1} = E = E^T$. 
+We can now show that the same orthogonal projection matrix used to project onto the column space of $\X$ is the same orthogonal projection matrix used to project onto the column space of $\X'$.
+The orthogonal projection matrix to projection onto the column space of $\X'$ is, 
+\begin{align*}
+\X' \left((\X')^T \X' \right)^{-1} \left(\X' \right)^T &= (\X E) \left( \left( \X E\right)^T \left(\X E \right) \right)^{-1} \left( \X E \right)^T\\
+&= \X E \left( E^T \X^T \X E \right)^{-1} E^T \X^T \\
+&= \X \underbrace{E E^{-1}}_{I_{p+1}} (\X^T \X)^{-1} \underbrace{(E^T)^{-1} E^T}_{I_{p+1}} \X^T \\
+&= \X \left( \X^T \X \right)^{-1} \X^T \quad \blacksquare
+\end{align*}
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (e)
+%-----------------------------------------------------------------
+\hardsubproblem{[MA] Generalize the previous problem by proving that orthogonal projection matrices that project onto any specific subspace are \emph{unique}.}\spc{10}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Let $W \subset \reals^n$ where $\text{dim}(W) = m \leq n.$
+Let $W^{\perp}$ be the orthogonal complement of $W$, i.e., $W^{\perp} = \lbrace \mathbf{x} \in \reals^n  ~\vert~ \mathbf{x}^T\mathbf{w} = 0, \medskip \mathbf{w} \in W \rbrace$ . We have that $W \bigcap W^{\perp} = \lbrace \mathbf{0} \rbrace$ and $\reals^n = W \bigoplus W^{\perp}$. Any $\mathbf{x} \in \reals^n$ can be expressed uniquely as $\mathbf{x} = \mathbf{w} + \mathbf{z}$ where $\mathbf{w} \in W$ and $\mathbf{z} \in W^{\perp}$. Let $\beta = \lbrace v_1, v_2, \ldots, v_m \rbrace $  and $\beta' = \lbrace u_1, u_2, \ldots, u_m \rbrace $ be two different ordered bases for $W$. Let $H = X(X^T X)^{-1}X^T$ where $X = [v_1 ~|~v_2~|~ \cdots ~|~v_m ]$ and $H' = X'(X'^T X')^{-1}X'^T $ where $X' = [u_1 ~|~u_2~|~ \cdots ~|~u_m ]$. By the uniqueness of $\mathbf{w}$, the orthogonal projection of $\mathbf{x}$ onto $W$, $H\mathbf{x} = H'\mathbf{x} = \mathbf{w}.$ We then have that $\mathbf{w} - \mathbf{w} = H\mathbf{x} - H'\mathbf{x} = (H - H')\mathbf{x} = \mathbf{0}$. Then,  null$(H-H') = \reals^n \implies$  rank($H - H') = 0 \implies H - H' = \mathbf{O}^{n \times n}  \implies H = H'$. $\quad \blacksquare$ 
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (f)
+%-----------------------------------------------------------------
+\hardsubproblem{[MA] Prove that if a square matrix is both symmetric and idempotent then it must be an orthogonal projection matrix.}\spc{10}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+Suppose $H$ is a square matrix and is both symmetric, i.e. $H^T = H$, and idempotent, i.e. $H^2 = H$. We need to show that $H$ is an orthogonal projection matrix which means that for $\mathbf{y} \in \reals_n$ we have $H\mathbf{y} \perp (\mathbf{y} - H\mathbf{y})$. 
+\begin{align*}
+(Hy)^T(y - Hy) &= y^T H^T(y - Hy)\\
+&= y^T H^T(I-H)y \\
+&= y^T H(I-H)y\\
+&= y^T(H - H^2)y \\
+&= y^T(H - H)y \\
+&= y^T(\mathbf{0}_{n \times n})y \\
+&= 0 \implies H\mathbf{y} \perp (\mathbf{y} - H\mathbf{y})
+\end{align*} 
+Hence, a square matrix that is both symmetric and idempotent \emph{must} be an orthogonal projection matrix. \quad $\blacksquare$
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (g)
+%-----------------------------------------------------------------
+\easysubproblem{Prove that $I_n$ is an orthogonal projection matrix for all $n \in \mathbb{N}$.}\spc{3}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+$I_n$ is an orthogonal projection matrix for all $n \in \mathbb{N}$ because $I_n$ is both:
+
+\begin{enumerate}
+\item[1)] Symmetric: $I_n = I_n^\top$
+\item[2)] Idempotent: $I_n \cdot I_n = I_n^2 = I_n$
+\end{enumerate}
+
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (h)
+%-----------------------------------------------------------------
+\easysubproblem{What subspace does $I_n$ project onto?}\spc{3}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+$I_n$ projects onto $\mathbb{R}^n$.
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (i)
+%-----------------------------------------------------------------
+\easysubproblem{Consider least squares linear regression using a design matrix $\X$ with rank $p + 1$. What are the degrees of freedom in the resulting model? What does this mean?}\spc{3}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+The degrees of freedom in the resulting model is precisely $p+1$, and this means that the $p+1$ weights that are produced from the least squares linear regression, $\beta_0, \beta_1, \ldots, \beta_p$ are independently found. 
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (j)
+%-----------------------------------------------------------------
+\easysubproblem{If you are orthogonally projecting the vector $\y$ onto the column space of $\X$ which is of rank $p + 1$, derive the formula for $\proj{\colsp{X}}{\y}$. Is this the same as in OLS?}\spc{8}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+Let $\colsp{\X} = \text{span}\lbrace \onevec_n, \, \x_{\cdot 1}, \, \ldots, \, \x_{\cdot p}   \rbrace$, $ \onevec_n, \, \x_{\cdot 1}, \, \ldots, \, \x_{\cdot p}, \y \in \reals^n $ and $k < n$. 
+We want to project $\y$ onto $\colsp{\X}$ and call it $\proj{\colsp{X}}{\y}$ such that $\y - \proj{\colsp{X}}{\y}$ is orthogonal to $\proj{\colsp{X}}{\y}$ which is called an \emph{orthogonal projection}. 
+We know that $\proj{\colsp{X}}{\y} \in \text{span}\lbrace \onevec_n, \, \x_{\cdot 1}, \, \ldots, \, \x_{\cdot p}   \rbrace$.
+Let $\X = [ \onevec_n~|~\x_{\cdot 1}~|~ \ldots~|~ \x_{\cdot p} ]$, and $\mathbf{w} \neq \mathbf{0}_{p+1}$ such that $ \proj{\colsp{X}}{\y} = \X \mathbf{w}$. \\
+
+By construction and due to orthogonality $\forall j \in \lbrace 1, 2, \ldots, p+1 \rbrace $, 
+\begin{align*}
+(\y - \X \mathbf{w})^T \x_{\cdot j} = 0 &\implies \x_{\cdot j}^T(\y - \X \mathbf{w}) = 0 \\
+&\implies \begin{cases}
+\onevec_n^T(\y - \X \mathbf{w}) = 0 \\
+\x_{\cdot 1}^T(\y - \X \mathbf{w}) = 0\\
+\vdots \\
+\x_{\cdot p}^T(\y - \X \mathbf{w}) = 0
+\end{cases} \\
+&\implies \X^T(\y - \X \mathbf{w}) = \mathbf{0}_{p+1} \\
+&\implies \X^T \y - \X^T \X \mathbf{w} = \mathbf{0}_{p+1} \\
+&\implies \X^T \y = \X^T \X \mathbf{w} \\
+&\implies \X^T \X \mathbf{w} = \X^T \y \\ 
+&\implies \mathbf{w} = \left(\X^T \X \right)^{-1} \X^T \y \\
+&\implies \proj{\colsp{X}}{\y} = \X \mathbf{w} = \X \left(\X^T \X \right)^{-1} \X^T \y
+\end{align*}
+
+
+And yes indeed! The geometric interpretation of orthogonally projecting the vector $\y$ onto the column space of $\X$ is precisely the same thing as performing OLS in minimizing the SSE! 
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (k)
+%-----------------------------------------------------------------
+\hardsubproblem{We saw that the perceptron is an \textit{iterative algorithm}. This means that it goes through multiple iterations in order to converge to a closer and closer $\bv{w}$. Why not do the same with linear least squares regression? Consider the following. Regress $\y$ using $\X$ to get $\yhat$. This generates residuals $\e$ (the leftover piece of $\y$ that wasn't explained by the regression's fit, $\yhat$). Now try again! Regress $\e$ using $\X$ and then get new residuals $\e_{new}$. Would $\e_{new}$ be closer to $\bv{0}_n$ than the first $\e$? That is, wouldn't this yield a better model on iteration \#2? Yes/no and explain.}\spc{10}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+No, applying the linear least squares regression iteratively would not yield a better model on iteration \# 2. Let $H = X(X^T X)^{-1}X^T$. When we regress $\y$ using $\X$ we get $\yhat$, i.e., $H \y = \yhat$ and we get residuals $(I - H)\y = \e $. If we apply the regression step again, we get ``new'' residuals $\e_{new} = (I-H)\e = (I-H)(I-H)\y = (I - H -H + H^2) \y = (I - H - H + H)\y = (I-H) \y = \e$. 
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (l)
+%-----------------------------------------------------------------
+\intermediatesubproblem{Prove that $\Q^\top = \Q^{-1}$ where $\Q$ is an orthonormal matrix such that $\colsp{\Q} = \colsp{\X}$ and $\Q$ and $\X$ are both matrices $\in \reals^{n \times (p+1)}$ and $n = p+1$ in this case to ensure the inverse is defined. Hint: this is purely a linear algebra exercise and it's a one-liner.}\spc{2}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+\[
+\Q^T \Q = I_{p+1} \quad \text{where } q_i^T q_j = \indic{i = j}
+\]
+Note: In this context $\Q^T$ is only a \emph{left-sided inverse} since $\Q\Q^T = H$.
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (m)
+%-----------------------------------------------------------------
+\easysubproblem{Prove that the least squares projection $\H = \XXtXinvXt = \Q\Q^\top$. Justify each step.}\spc{3}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+\begin{align*}
+H &= \XXtXinvXt \\
+&= \Q \left(\Q^T \Q \right)^{-1} \Q^T && \emph{substitution } X = Q \\
+&= \Q (I_n)^{-1} \Q^T && Q^{-1} = Q^T \implies Q^TQ = I_n \\
+&= \Q I_n \Q^T && I_n^{-1} = I_n \\
+&= \Q \Q^T && \emph{definition of multiplying by } I_n  \quad \blacksquare
+\end{align*}
+
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (n)
+%-----------------------------------------------------------------
+\hardsubproblem{[MA] This problem is independent of the others. Let $H$ be an orthogonal projection matrix. Prove that $\rank{\H} =\tr{\H}$. Hint: you will need to use facts about eigenvalues and the eigendecomposition of projection matrices.}\spc{12}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+By definition $\H = \X \left( \X^T \X \right)^{-1} \X^T$ and $\rank{\X} = \text{col}(\X) =  p+1$. Since $\H$ is an orthogonal projection matrix that projects onto the $p+1-$dimensional column space of $\X$ we conclude that $\rank{\H} = p+1$ as well. If we orthogonally project any column vector of $\X$ onto its own column space then we get the same column vector, i.e., $\H \x_{\cdot j} = \x_{\cdot j} $ for $j\in \lbrace 0, 1, 2, \ldots, p \rbrace$ (Note: $\x_{\cdot 0} = \onevec_n$). Hence, each column vector of $\X$ is an eigenvector of $\H$ and each respective eigenvalue $\lambda_j =1$. Then, the eigendecomposition of $\H$ gives us
+\[
+	\H = P^{-1} D P
+\]
+
+where $D = \begin{bmatrix}
+\lambda_1 = 1 & 0 & \cdots & 0 & 0 & \cdots & 0  \\
+0 & \lambda_2 = 1 & \cdots & 0 & 0 & \cdots & 0 \\
+0 & 0 & \ddots & 0 & 0 & \cdots & 0 \\
+0 & 0  & \cdots & \lambda_{p+1} = 1 & 0 & \cdots & 0 \\
+\vdots & \vdots & \ddots & 0 & 0 & \cdots & 0 \\
+\vdots & \vdots & \cdots & \vdots & \vdots & \ddots & \vdots  \\
+0 & 0 & \cdots & 0 & 0 & \cdots &  0
+\end{bmatrix}$
+
+\vspace{2mm}
+
+and $P = [\onevec_n ~|~ \x_{\cdot 1} ~|~ \x_{\cdot 2} ~|~ \cdots ~|~ \x_{\cdot p} ~|~ \v_{1} ~|~ \cdots ~|~ \v_{n-(p+1)}  ] $. 
+
+\vspace{2mm}
+
+Note that $\lbrace \onevec_n, \x_{\cdot 1}, \x_{\cdot 2}, \ldots, \x_{\cdot p} \rbrace$ is a basis for the column space of $\X$ and $\lbrace \v_{1}, \v_{2}, \cdots \v_{n - (p+1)} \rbrace$ is a basis for $\X^{\perp}$.
+
+\vspace{2mm}
+
+
+$\H$ and $D$ are similar matrices and we know that the trace of similar matrices are equal, namely,
+\[
+\text{tr}\left( \H \right) = \text{tr}(P^{-1} D P) = \text{tr}(D(PP^{-1})) = \text{tr}(D) = p+1 \quad \blacksquare
+\]
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (o)
+%-----------------------------------------------------------------
+\intermediatesubproblem{Prove that an orthogonal projection onto the $\colsp{\Q}$ is the same as the sum of the projections onto each column of $\Q$.}\spc{9}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+The orthogonal projection onto the $\colsp{\Q}$ is given by 
+\[
+	H = \Q(\Q^T\Q)^{-1}\Q^T = \Q(I_k)^{-1}\Q^T = \Q \Q^T. 
+\]
+
+Let's look at the matrix product $\Q \Q^T$:
+
+\[
+	H = \Q \Q^T = [q_1~|~q_2~|~\cdots~|~q_k] \begin{bmatrix}
+	q_1^T \\
+	q_2^T \\
+	\vdots \\
+	q_k^T
+	\end{bmatrix} = q_1 q_1^T + q_2 q_2^T + \cdots + q_k q_k^T
+\]. 
+
+We also know that $q_i q_i^T$ is an orthogonal projection matrix along the vector $q_i$ where $q_i$ is a unit vector, i.e., $||\, q_i || = 1$. We know this by the following,
+\[
+\text{proj}_{q_i}(\mathbf{a}) = ||\, \text{proj}_{q_i}(\mathbf{a}) || \cdot \dfrac{q_i}{||\, q_i ||} =  \dfrac{\mathbf{a}^T q_i}{||\, q_i ||} \cdot \dfrac{q_i}{||\, q_i ||} = \dfrac{q_i q_i^T}{|| \, q_i ||^2} \mathbf{a} = q_i q_i^T \mathbf{a} = H\mathbf{a}
+\]
+The projection of any vector $\mathbf{v} \in \reals_n$ onto the $\colsp{\Q}$,
+\begin{align*}
+\text{proj}_{\Q}(\mathbf{v}) = H \mathbf{v} 
+&= \Q \Q^T \mathbf{v}\\
+&= ( q_1 q_1^T + q_2 q_2^T + \cdots + q_k q_k^T) \mathbf{v} \\
+&= q_1 q_1^T \mathbf{v} + q_2 q_2^T \mathbf{v} + \cdots + q_k q_k^T \mathbf{v} \\
+&= \text{proj}_{q_1}(\mathbf{v}) + \text{proj}_{q_2}(\mathbf{v}) + \cdots + \text{proj}_{q_k}(\mathbf{v}) \\
+&= \sum_{i = 1}^k \text{proj}_{q_i}(\mathbf{v}) \quad \blacksquare
+\end{align*}
+
+
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (p)
+%-----------------------------------------------------------------
+\easysubproblem{Explain why adding a new column to $\X$ results in no change in the SST remaining the same.}\spc{1}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+By the very definition of SST, 
+\[
+	\text{SST} = \sum_{i=1}^n \left(y_i - \ybar \right)^2,
+\]
+the augmenting of a new column to $\X$ will keep SST unchanged since additional column(s) of $\X$ has/have no bearing to the SST which depends solely on the response labels $y_i$'s and the mean $\ybar$.
+
+
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (q)
+%-----------------------------------------------------------------
+\intermediatesubproblem{Prove that adding a new column to $\X$ results in SSR increasing.}\spc{4}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+First, from Problem \#2 part(o), 
+$\displaystyle \y = H \y = \Q \Q^T \y = \sum_{i=0}^p \text{proj}_{q_j}(\y)$
+
+By the pythagorean theorem, 
+\begin{align*}
+||\, \hat{\y} ||^2 &= \sum_{j=1}^p ||\, \text{proj}_{q_j}(\y) ||^2 \\
+&= ||\, \text{proj}_{q_0}(\y) ||^2 + \sum_{j=1}^p ||\, \text{proj}_{q_j}(\y) ||^2 \\
+&\implies ||\, \hat{\y} ||^2 - n \ybar^2 = \sum_{j=1}^p ||\, \text{proj}_{q_j}(\y) ||^2
+\end{align*}
+
+Note that, $q_0 = \onevec_n$
+\begin{align*}
+||\, \text{proj}_{\onevec_n}(\y) ||^2 &= \left|\left| \dfrac{1}{n}  \begin{bmatrix}
+1 & 1 & \cdots & 1 \\
+\vdots & \vdots & \ddots & \vdots \\
+1 & 1 & \cdots & 1
+\end{bmatrix} \y \right|\right|^2 \\
+&= ||\, \ybar \cdot \onevec_n ||^2 = \left( \ybar \cdot \onevec_n \right)^T \left( \ybar \cdot \onevec_n \right) = \ybar^2 \cdot \onevec_n^T \onevec_n = n \ybar^2
+\end{align*}
+
+
+Second, we'll show that,
+\[
+	\hat{\y}^T \onevec_n = (H\y)^T \onevec_n = \y^T H^T \onevec_n = \y^T H \onevec_n = \y^T \onevec_n = n \ybar.
+\]
+
+Now, we'll see that SSR is the following:
+\begin{align*}
+\text{SSR} = \sum_{i = 1}^n \left( \hat{y}_i - \ybar \right)^2 &= \left( \hat{\y} - \ybar \cdot \onevec_n \right)^T\left( \hat{\y} - \ybar \cdot \onevec_n  \right) \\
+&= \hat{\y}^T \hat{\y} - \ybar \cdot \onevec_n^T \hat{\y} - \ybar \hat{\y}^T \onevec_n + \ybar^2 \cdot \onevec_n^T \onevec_n \\
+&= ||\, \hat{\y} ||^2 - 2 \ybar \hat{\y}^T \onevec_n + n \ybar^2 \\
+&= ||\, \hat{\y} ||^2 - 2 n \ybar^2 + n \ybar^2\\
+&= ||\, \hat{\y} ||^2 - n\ybar^2 \\
+&= \sum_{j=1}^p ||\, \text{proj}_{q_j}(\y) ||^2
+\end{align*}
+
+If we add a new column to $\X$ then we get a new $\Q_{\star}$ with $q_{\star}$ augmented to $\Q$:
+
+\[
+	\text{SSR}_{\star} = \text{SSR} + \underbrace{||\, \text{proj}_{q_{\star}}(\mathbf{y}) ||^2}_{> 0} \implies \text{SSR}_{\star} > \text{SSR} \quad \blacksquare
+\]
+
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (r)
+%-----------------------------------------------------------------
+\intermediatesubproblem{What is overfitting? Use what you learned in this problem to frame your answer.}\spc{4}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+
+Overfitting is the fitting of a model to additional training features that decreases SSE and RMSE yet increases SSR and makes $R^2$ get closer to 1. The problem with overfitting is not with the in-sample error but with the out-of-sample error because though in-sample error decreases with additional training features it actually has the opposite effect on out-of-sample data. In a sense, one can describe overfitting as fitting data with diminishing returns on performance on out-of-sample data. Geometrically speaking, as one continues to include columns of data, as long as they are linearly independent to the columns of the original $\X$, the predicted $\yhat$ becomes closer and closer to the original $\y$. The column space eventually becomes the whole space and the projection of $\y$ becomes itself, but this is dishonest.
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (s)
+%-----------------------------------------------------------------
+\easysubproblem{Why are \qu{in-sample} error metrics (e.g. $R^2$, SSE, $s_e$) dishonest? Note: I'm leaving out RMSE as RMSE attempts to be honest by increasing as $p$ increases due to the denominator. I've chosen to use standard error of the residuals as the error metric of choice going forward.}\spc{5}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+The in-sample error metrics are dishonest when overfitting occurs because the additional features, i.e., proxies, $\x_{\cdot \star}$'s one includes into the model are no longer related to the proximal causes $z$'s yet as you continue to augment the matrix $\X$ with columns that can have anything in the entries as long as it keeps the matrix having full rank decreases SSE to 0 and makes $R^2$ approach 1. This then creates dismal performance in predicting the correct classification for out-of-sample data. 
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (t)
+%-----------------------------------------------------------------
+\easysubproblem{How can we provide honest error metrics (e.g. $R^2$, SSE, $s_e$)? It may help to draw a picture of the procedure.}\spc{14}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+A good way to honestly measure performance is to fit $g = \mathcal{A}\left(\mathbb{D}_{\text{train}} , \mathcal{H}\right)$ and to predict on $g\left( \X_{\emph{future}} \right) = \yhat_{\emph{future}}$ and compare $\yhat_{\emph{future}}$ to $\y_{\emph{future}}$. We will abbreviate \emph{out-of-sample} with \emph{oos}. The following will be our new and improved performance metrics:
+
+\begin{multicols}{2}
+\begin{itemize}
+\item $\e_{oos} = \y_{\emph{future}} - \hat{\y}_{\emph{future}}$
+\item $\displaystyle\text{SSE}_{oos} = \sum_{i=1}^{n_{\star}} e_{{oos}_i}^2$
+\item $oos\text{R}^2 = R_{oos}^2 = 1 - \dfrac{\text{SSE}_{oos}}{\text{SST}_{oos}}$
+\item $oos\text{RMSE} = \text{RMSE}_{oos} = \sqrt{\dfrac{\text{SSE}_{oos}}{n_{\star}}}$, $n_{\star} = \#$ of obs. in $\mathbb{D}_{\emph{future}}$
+\end{itemize}
+\end{multicols}
+
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------------------------
+% Part (t) (cont.)
+%---------------------------------------------------------
+
+\begin{tcolorbox}[colback=white, sharp corners]
+\underline{Part (t) (cont.)}:
+
+The problem is that we do not have $\mathbb{D}_{\emph{future}}$. So we partition our training data into $\mathbb{D}_{\emph{train}}$ and $\mathbb{D}_{\emph{test}}$. We let $\dfrac{1}{K}$ be the proportion of $\mathbb{D}$ in $\mathbb{D}_{\emph{test}}$. Under stationarity, the order of the rows of $\mathbb{D}$ does not matter. Thus, $g = \mathcal{A}\left( \mathbb{D}_{\emph{train}}, \mathcal{H} \right)$ and $\mathbb{D}_{\emph{test}}$ is to assess honest performance metrics. This is called \emph{validation}.
+
+\end{tcolorbox}
+
+
+%-----------------------------------------------------------------
+% Part (u)
+%-----------------------------------------------------------------
+\easysubproblem{The procedure in (t) produces highly variable honest error metrics. Can you change the procedure slightly to reduce the variation in the honest error metrics? What is this procedure called and how is it done?}\spc{6}
+
+\begin{tcolorbox}[colback = white, sharp corners]
+Since the \emph{oos} metrics are random realizations and may have a lot of variance we will apply a different procedure. We will split the data $K$ times into $\lbrace \mathbb{D}_{\emph{train}}, \mathbb{D}_{\emph{test}} \rbrace$. This procedure is called $K-$\emph{fold cross-validation}. For every time we split the data, we get an \emph{out-of-sample} residual $e_i$. We then get a vector of residuals $\e$ representing the residual for each of the $K$ splits and we then are able to compute more honest and ``stable'' metrics such as $oos$RMSE and $oos\text{R}^2$.
+
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+\newpage
+%================================================================
+% PROBLEM #3: K-FOLD VALIDATION
+%================================================================
+
+\problem{These are some questions related to validation.}
+
+\begin{enumerate}
+
+%-----------------------------------------------------------------
+% Part (a)
+%-----------------------------------------------------------------
+
+\easysubproblem{Assume you are doing one train-test split where you build the model on the training set and validate on the test set. What does the constant $K$ control? And what is its tradeoff?}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+The constant $K$ controls the proportion of the training data $\mathbb{D}$ that will be used as testing data $\mathbb{D}_{\emph{test}}$. The tradeoff is that estimation error increases and thus the generalization error estimate (oos error metrics) will be a tad bit worse than they will be using the model since the model that will be used in the future will be build with all of $\mathbb{D}$ (all $n$). So the oos error is conservative and the real oos error will be better. 
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (b)
+%-----------------------------------------------------------------
+
+\intermediatesubproblem{Assume you are doing one train-test split where you build the model on the training set and validate on the test set. If $n$ was very large so that there would be trivial misspecification error even when using $K=2$, would there be any benefit at all to increasing $K$ if your objective was to estimate generalization error? Explain.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+I do not think that increasing $K$ would benefit in estimating generalization error since $n$ is already very large and so even when $K=2$ the test data created by this split would serve well in determining the performance of the model of interest with honest performance metrics.
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (c)
+%-----------------------------------------------------------------
+
+\easysubproblem{What problem does $K$-fold CV try to solve?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+$K$-fold CV tries to solve the problem of having high variability in the ``honest'' error metrics when it comes to splitting the data just once into training and testing data.
+
+\end{tcolorbox}
+
+%-----------------------------------------------------------------
+% Part (d)
+%-----------------------------------------------------------------
+
+\hardsubproblem{[MA] Theoretically, how does $K$-fold CV solve this problem? The Internet is your friend.}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+$K$-fold cross validation helps solve the aforementioned problem by randomly dividing the data into $K$ equals-sized parts. We leave out park $k$, fit the model to the other $K-1$ parts (combined), and then obtain predictions for the left-out $k^{th}$ part. Let the $K$ parts be $C_1, C_2, \ldots, C_K$, where $C_k$ denotes the indices of the observation in part $k$. We then compute 
+\[
+\text{CV}_{(K)} = \sum_{k = 1}^K \dfrac{n_k}{n}\text{MSE}_k \quad \text{where } \text{MSE}_k = \sum_{i\in C_k} \dfrac{(y_i - \hat{y}_i)^2}{n_k}.
+\]
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+
+
+\end{document}
+
+
+
