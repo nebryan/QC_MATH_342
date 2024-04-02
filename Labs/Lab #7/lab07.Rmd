@@ -1,0 +1,543 @@
+---
+title: "Lab 7"
+author: "Bryan Nevarez"
+output: pdf_document
+---
+
+
+#Polynomial Regression and Interaction Regression
+
+We will work with the diamonds dataset again. Here we load up the dataset and convert all factors to nominal type:
+
+```{r}
+pacman::p_load(ggplot2) #this loads the diamonds data set too
+?diamonds
+diamonds$cut =      factor(diamonds$cut, ordered = FALSE)      #convert to nominal
+diamonds$color =    factor(diamonds$color, ordered = FALSE)    #convert to nominal
+diamonds$clarity =  factor(diamonds$clarity, ordered = FALSE)  #convert to nominal
+skimr::skim(diamonds)
+```
+
+Given the information above, what are the number of columns in the raw X matrix?
+
+There are a total of 10 columns in the raw X matrix.
+
+Verify this using code:
+
+```{r}
+ncol(diamonds)
+```
+
+Would it make sense to use polynomial expansions for the variables cut, color and clarity? Why or why not?
+
+It does not make sense because the variables are categorical. 
+
+Would it make sense to use log transformations for the variables cut, color and clarity? Why or why not?
+
+It does not make sense to use log transformations for the same reason as above. The bottom line is that you cannot transform ``dummies.''
+
+In order to ensure there is no time trend in the data, randomize the order of the diamond observations in D:.
+
+```{r}
+diamonds_rand = diamonds[sample(1:nrow(diamonds)), ]
+```
+
+Let's also concentrate only on diamonds with <= 2 carats to avoid the issue we saw with the maximum. So subset the dataset. Create a variable n equal to the number of remaining rows as this will be useful for later. Then plot it.
+
+```{r}
+
+diamonds_rand = diamonds_rand[diamonds_rand$carat <= 2, ]
+
+n = nrow(diamonds_rand)
+
+ggplot(diamonds_rand, aes(x = carat, y = price)) + 
+  geom_point()
+
+```
+
+Create a linear model of price ~ carat and gauge its in-sample performance using s_e.
+
+```{r}
+
+s_e = summary(lm(price ~ carat, data = diamonds_rand))$sigma
+s_e
+```
+
+Create a model of price ~ clarity and gauge its in-sample performance
+
+```{r}
+
+s_e_clarity = summary(lm(price ~ clarity, data = diamonds_rand))$sigma
+s_e_clarity
+
+```
+
+Why is the model price ~ carat substantially more accurate than price ~ clarity?
+
+Carat is a continuous data type yet clarity is a dummified categorical variable which affects the in-sample performance of the linear model. 
+
+Create a new transformed feature ln_carat and plot it vs price.
+
+```{r}
+
+diamonds_rand$ln_carat = log(diamonds_rand$carat)
+
+ggplot(diamonds_rand, aes(x = ln_carat, y = price)) + 
+  geom_point()
+```
+
+Would price ~ ln_carat be a better fitting model than price ~ carat? Why or why not?
+
+No, because there appears to be a less of a linear fit for price ~ ln_carat compared with price ~ carat.
+
+Verify this by comparing R^2 and RMSE of the two models:
+
+```{r}
+#
+mod1 = lm(price ~ carat, data = diamonds_rand)
+summary(mod1)$r.squared
+summary(mod1)$sigma
+
+
+#
+mod2 = lm(price ~ ln_carat, data = diamonds_rand)
+summary(mod2)$r.squared
+summary(mod2)$sigma
+
+```
+
+Create a new transformed feature ln_price and plot its estimated density:
+
+
+```{r}
+
+diamonds_rand$ln_price = log(diamonds_rand$price)
+
+ggplot(diamonds_rand) + geom_histogram(aes(x = ln_price), binwidth = 0.01)
+```
+
+
+Now plot it vs carat.
+
+```{r}
+ggplot(diamonds_rand, aes(x = carat, y = ln_price)) + 
+  geom_point()
+```
+
+Would ln_price ~ carat be a better fitting model than price ~ carat? Why or why not?
+
+Yes, it would be a better fitting model because it has a more a linear pattern. 
+
+Verify this by computing s_e of this new model. Make sure these metrics can be compared apples-to-apples with the previous.
+
+```{r}
+
+#
+mod1 = lm(price ~ carat, data = diamonds_rand)
+summary(mod1)$r.squared
+summary(mod1)$sigma
+
+#
+mod3 = lm(ln_price ~ carat, data = diamonds_rand)
+summary(mod3)$r.squared
+summary(mod3)$sigma
+
+y_hat = exp(mod3$fitted.values) 
+y = diamonds_rand$price
+
+e = y - y_hat
+
+1 - sum(e^2) / sum((y - mean(y))^2) # Rsquared
+
+sqrt(sum(e^2)/(mod3$df.residual)) # RMSE
+
+```
+
+We just compared in-sample statistics to draw a conclusion on which model has better performance. But in-sample statistics can lie! Why is what we did valid?
+
+There is a large n and low p then there will be no difference between in-sample statistics. 
+
+Plot ln_price vs ln_carat.
+
+```{r}
+ggplot(diamonds_rand, aes(x = ln_carat, y = ln_price)) + 
+  geom_point()
+```
+
+Would ln_price ~ ln_carat be the best fitting model than the previous three we considered? Why or why not?
+
+Yes, this would be the best fitting model than the previous three we have considered because it has the most linear shape of the data. 
+
+Verify this by computing s_e of this new model. Make sure these metrics can be compared apples-to-apples with the previous.
+
+```{r}
+
+#
+mod4 = lm(ln_price ~ ln_carat, data = diamonds_rand)
+summary(mod4)$r.squared
+summary(mod4)$sigma
+
+y_hat = exp(mod4$fitted.values) 
+y = diamonds_rand$price
+
+e = y - y_hat
+
+1 - sum(e^2) / sum((y - mean(y))^2) # Rsquared
+
+sqrt(sum(e^2)/(mod4$df.residual)) # RMSE
+
+```
+
+Compute b, the OLS slope coefficients for this new model of ln_price ~ ln_carat.
+
+```{r}
+
+b = coef(mod4)
+b
+
+```
+
+Interpret b_1, the estimated slope of ln_carat.
+
+If carat increases by p%, then price increases by approximately 1.7*p%. 
+
+
+Interpret b_0, the estimated intercept.
+
+A 1 carat diamond the price is predicted to be approximately e^8.5 = 4,914.77 dollars. 
+
+Create other features ln_x, ln_y, ln_z, ln_depth, ln_table.
+
+```{r}
+
+diamonds_rand$ln_x = log(diamonds_rand$x)
+diamonds_rand$ln_y = log(diamonds_rand$y)
+diamonds_rand$ln_z = log(diamonds_rand$z)
+diamonds_rand$ln_depth = log(diamonds_rand$depth)
+diamonds_rand$ln_table = log(diamonds_rand$table)
+
+```
+
+From now on, we will be modeling ln_price (not raw price) as the prediction target. 
+
+Create a model (B) of ln_price on ln_carat interacted with clarity and compare its performance with the model (A) ln_price ~ ln_carat.
+
+```{r}
+#Model B
+
+modB = lm(ln_price ~ ln_carat * clarity, diamonds_rand)
+summary(modB)$sigma
+```
+
+Which model does better? Why?
+
+It is better because of additional features and therefore have reduced ignorance errors. 
+
+Create a model of (C) ln_price on ln_carat interacted with every categorical feature (clarity, cut and color) and compare its performance with model (B)
+
+```{r}
+#Model C
+
+modC = lm(ln_price ~ ln_carat * (clarity + cut + color), diamonds_rand)
+summary(modC)$sigma
+
+```
+
+Which model does better? Why?
+
+The model C is better than model B because of the additional features included in this model. 
+
+Create a model (D) of ln_price on every continuous feature (logs of carat, x, y, z, depth, table) interacted with every categorical feature (clarity, cut and color) and compare its performance with model (C).
+
+```{r}
+#Model D
+diamonds_rand =diamonds_rand[diamonds_rand$x != 0 & diamonds_rand$y !=0 & diamonds_rand$z !=0 & diamonds_rand$depth != 0 & diamonds_rand$table !=0, ]
+modD = lm(ln_price ~ (ln_carat + ln_x + ln_y + ln_z + ln_depth + ln_table) * (clarity + cut + color), diamonds_rand)
+summary(modD)$sigma
+
+```
+
+Which model does better? Why?
+
+The model D is better than model C because of the additional features and interactions included in this model. 
+
+What is the p of this model D? Compute with code.
+
+```{r}
+modD$rank - 1
+```
+
+Create model (E) which is the same as before except create include the raw features interacted with the categorical features and gauge the performance against (D).
+
+```{r}
+#Model E
+modE = lm(ln_price ~ (carat + x + y + z + depth + table) * (clarity + cut + color), diamonds_rand)
+summary(modE)$sigma
+```
+
+Which model does better? Why?
+
+The model E is better than model D because of the additional features included in this model. 
+
+Create model (F) which is the same as before except also include also third degree polynomials of the continuous features interacted with the categorical features and gauge performance against (E). By this time you're getting good with R's formula syntax!
+
+```{r}
+#Model F
+modF = lm(ln_price ~ (poly(carat, 3) + poly(x,3) + poly(y,3) +  poly(z,3) + poly(depth, 3) + poly(table,3)) * (clarity + cut + color), diamonds_rand)
+summary(modF)$sigma
+```
+
+Which model does better? Why?
+
+Yes, model F is better than model E because the third degree polynomials fit the data better. 
+
+Can you think of any other way to expand the candidate set curly H? Discuss.
+
+We can expand the candidate set (curly H) by using a higher degree polynomial which may lead to reducing misspecification error.
+
+We should probably assess oos performance now. Sample 2,000 diamonds and use these to create a training set of 1,800 random diamonds and a test set of 200 random diamonds. Define K and do this splitting:
+
+```{r}
+train_indices = sample(1:nrow(diamonds_rand),1800)
+test_indices = sample(setdiff(1:nrow(diamonds_rand), train_indices))
+diamonds_rand_train = diamonds_rand[train_indices, ]
+diamonds_rand_test = diamonds_rand[test_indices,]
+
+modF = lm(ln_price ~ (poly(carat, 3) + poly(x,3) + poly(y,3) +  poly(z,3) + poly(depth, 3) + poly(table,3)) * (clarity + cut + color), diamonds_rand_train)
+
+
+y_hat_test = predict(modF, diamonds_rand_test)
+mean((diamonds_rand_test$ln_price - y_hat_test)^2)
+```
+
+Compute in and out of sample performance for models A-F. Use s_e as the metric (standard error of the residuals). Create a list with keys A, B, ..., F to store these metrics. Remember the performances here will be worse than before since before you're using nearly 52,000 diamonds to build a model and now it's only 1,800! 
+
+```{r}
+
+#All model formulas for reuse later
+model_formulas = list(
+  A = ln_price ~ ln_carat,
+  B = ln_price ~ ln_carat * clarity,
+  C = ln_price ~ ln_carat * (clarity + cut + color),
+  D = ln_price ~ (ln_carat + ln_x + ln_y + ln_z + ln_depth + ln_table) * (clarity + cut + color),
+  E = ln_price ~ (carat + x + y + z + depth + table) * (clarity + cut + color) * (clarity + cut + color), 
+  F = ln_price ~ (poly(carat, 3) + poly(x,3) + poly(y,3) +  poly(z,3) + poly(depth, 3) + poly(table,3)) * (clarity + cut + color)
+)
+
+#Model A
+mod = lm(model_formulas[["A"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+#Model B
+mod = lm(model_formulas[["B"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+#Model C
+mod = lm(model_formulas[["C"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+#Model D
+mod = lm(model_formulas[["D"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+#Model E 
+mod = lm(model_formulas[["E"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+#Model F 
+mod = lm(model_formulas[["F"]], diamonds_rand)
+summary(mod)$sigma
+mod$rank #i.e. degrees of freedom  = # vectors in colsp[X] to project onto
+
+
+
+oos_se = list()
+all_models_train = list()
+for (model_idx in LETTERS[1 : 6]){
+  all_models_train[[model_idx]] = lm(model_formulas[[model_idx]], diamonds_rand[train_indices, ])
+  summary(all_models_train[[model_idx]])$sigma
+  oos_se[[model_idx]] = sd(diamonds_rand$ln_price[test_indices] - predict(all_models_train[[model_idx]], diamonds_rand[test_indices, ]))
+}
+oos_se
+
+```
+
+You computed oos metrics only on n_* = 200 diamonds. What problem(s) do you expect in these oos metrics?
+
+They are variable. And something is wrong with F! Possibly Runge's phenomenon?
+
+To do the K-fold cross validation we need to get the splits right and crossing is hard. We've developed code for this already in a previous lab.
+
+```{r}
+K = 10
+n_sub = 2000
+set.seed(1984)
+n_test = 1 / K * n_sub
+n_train = n_sub - n_test
+test_indices = sample(1 : n, n_test)
+train_indices = sample(setdiff(1 : n, test_indices), n_train)
+all_other_indices = setdiff(1 : n, c(test_indices, train_indices))
+
+
+temp = rnorm(n)
+folds_vec = cut(temp, breaks = quantile(temp, seq(0, 1, length.out = K + 1)), include.lowest = TRUE, labels = FALSE)
+rm(temp)
+head(folds_vec, 200)
+```
+
+Do the K-fold cross validation for model F and compute the overall s_e and s_s_e. 
+
+```{r}
+oos_se = list()
+oos_s_se = list()
+for (model_idx in LETTERS[1 : 6]){
+  e_vec_k = list() #for each one
+  for (k in 1 : K){
+    test_indicies_k = which(folds_vec == k)
+    train_indicies_k = which(folds_vec != k)
+    mod = lm(model_formulas[[model_idx]], diamonds_rand[train_indicies_k, ])
+    e_vec_k[[k]] = sd(diamonds_rand$ln_price[test_indicies_k] - predict(mod, diamonds_rand[test_indicies_k, ]))
+  }
+  oos_se[[model_idx]] = mean(unlist(e_vec_k)) #note: not exactly the overall sd, but close enough
+  oos_s_se[[model_idx]] = sd(unlist(e_vec_k))
+}
+res = rbind(unlist(oos_se), unlist(oos_s_se))
+rownames(res) = c("avg", "sd")
+res
+```
+
+Does K-fold CV help reduce variance in the oos s_e? Discuss.
+
+#TO-DO
+
+Imagine using the entire rest of the dataset besides the 2,000 training observations divvied up into slices of 200. Measure the oos error for each slice on Model F in a vector `s_e_s_F` and compute the `s_s_e_F` and also plot it.
+
+```{r}
+n_step = 1 / K * n_sub
+oos_se = list()
+ses = list()
+starting_ks = seq(from = 1, to = (length(all_other_indices) - n_step), by = n_step)
+for (model_idx in LETTERS[1 : 6]){
+  se_k = list() #for each one
+  for (k in 1 : length(starting_ks)){
+    diamonds_k = diamonds_rand[all_other_indices[starting_ks[k] : (starting_ks[k] + n_step - 1)], ]
+    se_k[[k]] = sd(diamonds_k$ln_price - predict(all_models_train[[model_idx]], diamonds_k))
+  }
+  ses[[model_idx]] = se_k
+  oos_se[[model_idx]] = unlist(se_k)
+}
+
+pacman::p_load(reshape2)
+ggplot(reshape2::melt(oos_se)) + geom_boxplot(aes(x = L1, y = value)) + xlab("model")
+ggplot(reshape2::melt(oos_se)) + geom_boxplot(aes(x = L1, y = value)) + xlab("model") + ylim(0, 5000)
+
+
+
+#ggplot(data.frame(s_e_s_F = s_e_s_F)) + geom_histogram(aes(x = s_e_s_F))
+```
+
+
+#Rcpp and optimizing R
+
+Write a function `dot_product_R` in R that takes in two vectors `v1` and `v2` and returns their dot product.
+
+```{r}
+
+dot_product_R = function(v1, v2){
+  dot_product = 0
+  for(i in 1:length(v1)){
+    dot_product = dot_product + v1[i] * v2[i]
+  }
+  dot_product
+}
+
+```
+
+Write a function `dot_product_cpp` in C++ and make sure it compiles.
+
+```{r}
+pacman::p_load(Rcpp)
+
+cppFunction('
+  double dot_product_cpp(NumericVector v1, NumericVector v2) {
+  
+  double dot_product = 0;
+  for(int i = 0; i < v1.length(); i++){
+    dot_product = dot_product + v1[i] * v2[i];
+  }
+  return dot_product;
+  }
+')
+```
+
+Create two vectors of standard normal realizations with length `n=1e6` and test the different in speed.
+
+```{r}
+n = 1e6
+v1 = rnorm(n)
+v2 = rnorm(n)
+
+pacman::p_load(microbenchmark)
+microbenchmark(
+  dot_product_R(v1, v2), 
+  dot_product_cpp(v1, v2),
+  times = 10
+)
+```
+
+Implement the Gram Schmidt routine as a C++ function `gram_schmidt_cpp`.
+
+```{r}
+
+pacman::p_load(Rcpp)
+
+cppFunction('
+  double dot_product_cpp(NumericVector v1, NumericVector v2) {
+  
+  double dot_product = 0;
+  for(int i = 0; i < v1.length(); i++){
+    dot_product = dot_product + v1[i] * v2[i];
+  }
+  return dot_product;
+  }
+')
+
+```
+
+Here is the implementation in R for reference taken from lab 5:
+
+```{r}
+gram_schmidt_R = function(X){
+  #first create orthogonal matrix
+  V = matrix(NA, nrow = nrow(X), ncol = ncol(X))
+  V[, 1] = X[, 1]
+  
+  for (j in 2 : ncol(X)){
+    V[, j] = X[, j]
+    
+    for (k in 1 : (j-1)){
+      v_k = V[, k, drop = FALSE]
+      V[, j] = V[, j, drop = FALSE] - (t(t(v_k)) %*% t(v_k) / sum(v_k^2)) %*% t(t(X[, j])) #i.e. the orthogonal projection of X[, j] onto v_k
+    }
+  }
+  
+  Q = matrix(NA, nrow = nrow(X), ncol = ncol(X))
+  for (j in 1 : ncol(X)){
+    Q[, j] = V[, j] / sqrt(sum(V[, j]^2))
+  }
+  Q
+}
+```
+
+Now let's see how much faster C++ is by running it on the boston housing data design matrix
+```{r}
+X = model.matrix(medv ~ ., MASS::Boston)
+
+microbenchmark(
+  gram_schmidt_R(X),
+  gram_schmidt_cpp(X),
+  times = 10
+)
+```
+
+
