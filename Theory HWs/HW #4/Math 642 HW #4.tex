@@ -1,0 +1,755 @@
+\documentclass[12pt]{article}
+\usepackage{tcolorbox}
+
+\include{preamble}
+
+\newtoggle{professormode}
+%\toggletrue{professormode} %STUDENTS: DELETE or COMMENT this line
+
+
+
+\title{MATH 342W / 642 / RM 742 Spring \the\year~ HW \#4}
+
+\author{Bryan Nevarez} %STUDENTS: write your name here
+
+\iftoggle{professormode}{
+\date{Due 11:59PM April 14 \\ \vspace{0.5cm} \small (this document last updated \currenttime~on \today)}
+}
+
+\renewcommand{\abstractname}{Instructions and Philosophy}
+
+\begin{document}
+\maketitle
+
+\iftoggle{professormode}{
+\begin{abstract}
+The path to success in this class is to do many problems. Unlike other courses, exclusively doing reading(s) will not help. Coming to lecture is akin to watching workout videos; thinking about and solving problems on your own is the actual ``working out.''  Feel free to \qu{work out} with others; \textbf{I want you to work on this in groups.}
+
+Reading is still \textit{required}. You should be googling and reading about all the concepts introduced in class online. This is your responsibility to supplement in-class with your own readings.
+
+The problems below are color coded: \ingreen{green} problems are considered \textit{easy} and marked \qu{[easy]}; \inorange{yellow} problems are considered \textit{intermediate} and marked \qu{[harder]}, \inred{red} problems are considered \textit{difficult} and marked \qu{[difficult]} and \inpurple{purple} problems are extra credit. The \textit{easy} problems are intended to be ``giveaways'' if you went to class. Do as much as you can of the others; I expect you to at least attempt the \textit{difficult} problems. 
+
+This homework is worth 100 points but the point distribution will not be determined until after the due date. See syllabus for the policy on late homework.
+
+Up to 7 points are given as a bonus if the homework is typed using \LaTeX. Links to instaling \LaTeX~and program for compiling \LaTeX~is found on the syllabus. You are encouraged to use \url{overleaf.com}. If you are handing in homework this way, read the comments in the code; there are two lines to comment out and you should replace my name with yours and write your section. The easiest way to use overleaf is to copy the raw text from hwxx.tex and preamble.tex into two new overleaf tex files with the same name. If you are asked to make drawings, you can take a picture of your handwritten drawing and insert them as figures or leave space using the \qu{$\backslash$vspace} command and draw them in after printing or attach them stapled.
+
+The document is available with spaces for you to write your answers. If not using \LaTeX, print this document and write in your answers. I do not accept homeworks which are \textit{not} on this printout. Keep this first page printed for your records.
+
+\end{abstract}
+
+\thispagestyle{empty}
+\vspace{1cm}
+NAME: \line(1,0){380}
+\clearpage
+}
+
+%===============================================
+% PROBLEM #1: SIGNAL & THE NOISE (CHAPTERS 7-11) 
+%===============================================
+
+\problem{These are questions about the rest of Silver's book, chapters 7--11. You can skim chapter 10 as it is not so relevant for the class. For all parts in this question, answer using notation from class (i.e. $t ,f, g, h^*, \delta, \epsilon, e, t, z_1, \ldots, z_t, \mathbb{D}, \mathcal{H}, \mathcal{A}, \mathcal{X}, \mathcal{Y}, X, y, n, p, x_{\cdot 1}, \ldots, x_{\cdot p}$, $x_{1 \cdot}, \ldots, x_{n \cdot}$, etc.) as well as in-class concepts (e.g. simulation, validation, overfitting, etc) and also we now have $f_{pr}, h^*_{pr}, g_{pr}, p_{th}$, etc from probabilistic classification as well as different types of validation schemes).
+
+Note: I will not ask questions in this assignment about Bayesian calculations and modeling (a large chunk of Chapters 8 and 10) as this is the subject of Math 341/343. }
+
+
+\begin{enumerate}
+
+%-----------------------------------------------
+% Part(a)
+%-----------------------------------------------
+\easysubproblem{Why are flu fatalities hard to predict? Which type of error is most dominant in the models?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Flu fatalities are hard to predict due to the scant amount of data, $\mathbb{D}$, that exists for a particular disease. Quite often, the assumptions made to make models that are used to predict fatalities from a disease are overly simplistic, i.e., the candidate set of functions $\mathcal{H}$, are not expansive enough to approximate reality. Particularly with disease, \emph{generalization error}, the prediction error over an independent testing sample, is the most dominant type of error in these models.
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(b)
+%-----------------------------------------------
+\easysubproblem{In what context does Silver define extrapolation and what term did he use? Why does his terminology conflict with our terminology?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Silver defines \emph{extrapolation} in the context of making prediction under the assumption that a ``certain trend will continue indefinitely.''
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(c)
+%-----------------------------------------------
+\easysubproblem{Give a couple examples of extraordinary prediction failures (by very famous people who were considered heavy-hitting experts of their time) that were due to reckless extrapolations.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Silver mentions a very famous person, one who wielded strong political power in President Ford, for example, who in haste, commanded the nation to take prematurely developed vaccines to prevent fatalities from a potential spread of the H1N1 swine flu based upon a prediction from his secretary of health, F. David Mathews, of a million American deaths which started from an outbreak of this strain at a New Jersey military post named Fort Dix. Lebron James is another famous person that predicted based upon extrapolation winning ``...not 5, not 6, not 7...'' NBA championships alongside Dwayne Wade, and Chris Bosh back in 2011. He only won 2 championships with the Heat in his tenure with the Heat franchise.
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(d)
+%-----------------------------------------------
+\easysubproblem{Using the notation from class, define \qu{self-fulfilling prophecy} and \qu{self-canceling prediction}.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+A ``self-fulfilling prophecy'' can be defined as the target function $f$ fitting the model $g$ itself rather than the other way around. It would then produce less and less predictive error. On the other hand, a ``self-canceling prophecy'' can be defined as the opposite of the aformentioned definition for a ``self-fulfilling prophesy'' where the target function $f$ fits the model $g$ even less and less after doing more prediction upon out-of-sample data. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(e)
+%-----------------------------------------------
+\easysubproblem{Is the SIR model of infectious disease under or overfit? Why?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The SIR model of infection disease is a serious underfit because of its simplistic framework for representing the trend/behavior of the data. For example, this model assumes that everyone behaves equally the same which is obviously a gross oversimplification of how people behave due to their culture, creed, race, gender, age, religion, etc. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(f)
+%-----------------------------------------------
+\easysubproblem{What did the famous mathematician Norbert Wiener mean by \qu{the best model of a cat is a cat}?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Norbert Wiener means that the best model for a particular phenomenon is the phenomenon itself. Any other model would be missing some detail of the phenomenon that would make the model ``wrong'' as George Box has famously quipped about models. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(g)
+%-----------------------------------------------
+\easysubproblem{Not in the book but about Norbert Wiener. From Wikipedia: 
+
+\begin{quote}
+Norbert Wiener is credited as being one of the first to theorize that all intelligent behavior was the result of feedback mechanisms, that could possibly be simulated by machines and was an important early step towards the development of modern artificial intelligence.
+\end{quote}
+
+What do we mean by \qu{feedback mechanisms} in the context of this class?}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+I think Norbert Wiener's ``feedback mechanism'' can be defined as the cross-validation process that we have defined in the context of this class. The cross-validation process gives the modeler feedback on how well the predictive performance of a model is which would, ostensibly, give the modeler the ability to tune the model's parameters and/or come up with more expansive candidate sets of functions, $\mathcal{H}$, or more effective algorithms $\mathcal{A}$. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(h)
+%-----------------------------------------------
+\easysubproblem{I'm not going to both asking about the bet that gave Bob Voulgaris his start. But what gives Voulgaris an edge (p239)? Frame it in terms of the concepts in this class.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+What gives Voulgaris an edge with his bets and predictions on NBA games is his large number of data points $x_1, \cdots, x_n$ from nearly all of the NBA games he watches. Also, he has a large number of features $p$ from his surveillance of a player's Twitter feeds to the assistants he hires that records every player's defensive position on every play. He has tons of information by way of data that he stores as a vector in $\X$. One can say that his design matrix $\X$ has lots and lots of rows and columns. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(i)
+%-----------------------------------------------
+\easysubproblem{Why do you think a lot of science is not reproducible?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+A lot of science, as reported from research findings, is not reproducible because it is hard to replicate the conditions of the phenomenon exactly as they were observed by the researchers. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(j)
+%-----------------------------------------------
+\easysubproblem{Why do you think Fisher did not believe that smoking causes lung cancer?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Fisher did not believe that smoking causes lung cancer because: 
+\begin{itemize}
+\item he did not believe that correlation implied causation
+\item he was quite the contrarian in his time
+\item he was a lifelong smoker himself
+\end{itemize}
+This all attributes to the likelihood that Fisher himself was biased when it came to his overall thought on the conclusion that smoking caused lung cancer. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(k)
+%-----------------------------------------------
+\easysubproblem{Is the world moving more in the direction of Fisher's Frequentism or Bayesianism?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Both the frequentist and Bayesian frameworks are in themselves viable ways of viewing the world. However, given the information age we are living in by way of big data, the world seems to be moving more in the direction of Bayesianism. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(l)
+%-----------------------------------------------
+\easysubproblem{How did Kasparov defeat Deep Blue? Can you put this into the context of over and underfiting?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Kasparov exploited Deep Blue's tendency to obey certain heuristics such as ``accept a trade when your opponent gives up the more powerful piece.'' Since Deep Blue was trained upon numerous past chess matches, Kasparov was able to make a move that would bring Deep Blue into a state where it had very little data on the state of the game which would lead it to underfit and not have reliable data to go about achieving a victory over Kasparov. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(m)
+%-----------------------------------------------
+\easysubproblem{Why was Fischer able to make such bold and daring moves?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Both by the coupling of confidence and creativity was Fischer able to make bold and daring moves that went beyond the conventional thinking and/or \emph{heuristics}.
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(n)
+%-----------------------------------------------
+\easysubproblem{What metric $y$ is Google predicting when it returns search results to you? Why did they choose this metric?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Google predicts $y$ the order of the search results in which you will find most useful based upon the PageRank algorithm. The metric is based upon the score of how many other Web pages link to the one you may be seeking out which seems to be a pretty good proxy for ``usefulness.''
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(o)
+%-----------------------------------------------
+\easysubproblem{What do we call Google's \qu{theories} in this class? And what do we call \qu{testing} of those theories?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+We call Google's ``theories'' as the functions in the candidate set $\mathcal{H}$ we get from applying a learning algorithm $\mathcal{A}$ to arrive at the ``best'' theory given the data $\mathcal{D}$, and \qu{testing} of those theories is what we call the model selection process by cross-validation. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(p)
+%-----------------------------------------------
+\easysubproblem{p315 give some very practical advice for an aspiring data scientist. There are a lot of push-button tools that exist that automatically fit models. What is your edge from taking this class that you have over people who are well-versed in those tools?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Having more deeper knowledge of how the tools work from taking this class gives the student an edge in providing the foundational knowledge of how \emph{prediction} works (and its limitations) over the person who is only well-versed in the application of predictive tools. Knowing how to use predictive tools may be limiting while knowing how to use predictive tools along with the deeper understanding of how prediction works can be useful in drawing more meaningful conclusions from the predictive results and/or may be used to make improvements to existing or new predictive modeling frameworks. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(q)
+%-----------------------------------------------
+\easysubproblem{Create your own 2$\times$2 luck-skill matrix (Fig. 10-10) with your own examples (not the ones used in the book).}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+ \textbf{Skill vs. Luck Matrix} & \textbf{Low Luck} & \textbf{High Luck}\\
+ \hline
+ \textbf{Low Skill} & Checkers & Monopoly  \\
+ \hline
+ \textbf{High Skill} & Basketball  &  Sports Betting \\
+ \hline
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(r)
+%-----------------------------------------------
+\easysubproblem{[EC] Why do you think Billing's algorithms (and other algorithms like his) are not very good at no-limit hold em? I can think of a couple reasons why this would be.}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The nonstationarity of the phenomenon and the impossibility to consistently represent the causal drivers by the proxies lends itself to produce fruitless algorithms in poker. The very nature of poker is random and it is difficult to predict phenomenon that are purely random. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(s)
+%-----------------------------------------------
+\easysubproblem{Do you agree with Silver's description of what makes people successful (pp326-327)? Explain.}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Yes, I do agree with Silver's description of what makes people ``successful'' particularly in the United States. A bigger home, a high pay, the number of possessions, the success achieved in a particular career, is often attributed to a combination of ``hard work, natural talent, a person's opportunities and environment.'' It is a combination of ``signal and noise'' as Silver puts it. Success in the sense of monetary and professional gain it often requires high skill which often is attained by years of hard work and discipline of learning and mastering the skills needed. Along with that you need the right opportunity from people or one's own environment to exercise those skills to bring to fruition the rewards of those skills. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(t)
+%-----------------------------------------------
+\easysubproblem{Silver brings up an interesting idea on p328. Should we remove humans from the predictive enterprise completely after a good model has been built? Explain}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The idea of humans being completely removed from the predictive enterprise after a good model is built seems like a good idea because we tend to be too tied down to results and not in the process itself. A prediction from a good model may have been an aberration and not the norm. This idea seems to indicate that success in prediction is further improved when we care more about the \emph{means} (process) than in the \emph{ends} (results). 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(u)
+%-----------------------------------------------
+\easysubproblem{According to Fama, using the notation from this class, how would explain a mutual fund that performs spectacularly in a single year but fails to perform that well in subsequent years?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+This phenomenon of a mutual fund performing spectacularly in one year but fails to perform well in subsequent years reminds me of in-sample error being low and out-of-sample error being high based upon a model's prediction. Further, this phenomenon resembles quite the idea of \emph{extrapolation}, the prediction upon data outside of the input space of the data, quite closely. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(v)
+%-----------------------------------------------
+\easysubproblem{Did the Manic Momentum model validate? Explain.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+No, the Manic Momentum model did not validate because if it were applied beginning in January 2000 where the initial investment of \$10,000 went down to \$4,000 due to the change in the direction of the stock market. So, the Manic Momentum model would not have produced desirable results in the ten-year period after the year 2000 (out-of-sample). 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(w)
+%-----------------------------------------------
+\easysubproblem{Are stock market bubbles noticable while we're in them? Explain.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+In general, it is hard to notice bubbles while one is in them, especially according to Fama. Identifying a bubble is easier in hindsight. Additionally, when the rate of increase of the stock market grows faster than its historical average is an indication of a potential bubble forming.
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(x)
+%-----------------------------------------------
+\easysubproblem{What is the implication of Shiller's model for a long-term investor in stocks?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The implication of Shiller's model for a long-term investor in stocks is that a long-term investor in stocks would on average make the profit years ahead, typically in a 10 year period, of its initial time of when the stock was bought. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(y)
+%-----------------------------------------------
+\easysubproblem{In lecture one, we spoke about \qu{heuristics} which are simple models with high error but extremely easy to learn and live by. What is the heuristic Silver quotes on p358 and why does it work so well?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Silver quotes the heuristic of ``follow the crowd, especially when you don't know any better.'' This heuristic tends to work well in general because the idea behind the \emph{wisdom of the crowds} is that the mistakes we may have tend to ``\emph{cancel each other out}.''
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(z)
+%-----------------------------------------------
+\easysubproblem{Even if your model at predicting bubbles turned out to be good, what would prevent you from executing on it?}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Bubbles take a long time to ``pop.'' The market, as Keynes puts it, may ``stay irrational longer than you can say solvent.'' Even if we were able to predict we were in a bubble it is harder to predict when the bubble will deflate due to the constraints found in trading and on capital. 
+\end{tcolorbox}
+
+
+%-----------------------------------------------
+% Part(aa)
+%-----------------------------------------------
+\easysubproblem{How can heuristics get us into trouble?}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The instinctive response to thinking that things that are going up to continue going up, give our heuristics, is precisely what gets investors in trouble. Most of the time doing what everyone else is doing leads us to no trouble, but when things go wrong, in a herd, it really goes wrong. 
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+\newpage
+%===============================================
+% PROBLEM #2: OLS REGRESSION 
+%===============================================
+
+\problem{These are some questions related to polynomial-derived features and logarithm-derived features in use in OLS regression.}
+
+\begin{enumerate}
+%-----------------------------------------------
+% Part(a)
+%-----------------------------------------------
+\intermediatesubproblem{What was the overarching problem we were trying to solve when we started to introduce polynomial terms into $\mathcal{H}$? What was the mathematical theory that justified this solution? Did this turn out to be a good solution? Why / why not?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The impetus for introducing polynomial terms into $\mathcal{H}$ was to solve the problem of misspecification error when the target function $f(x)$ is nonlinear. Both the \emph{Weierstrauss Approximation Theorem} (1885) and the \emph{Stone-Weierstrauss Theorem} (1937) are the two main theorems that justify the usage of polynomial function to approximate any continuous function $f$ with arbitrary precision by picking its degree $d$: 
+\[
+	\forall \, \epsilon > 0, \quad \forall x \in [a,b], \quad \exists \, d \quad \vert f(x) - p_d(x) \vert < \epsilon.
+\]
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(b)
+%-----------------------------------------------
+\intermediatesubproblem{We fit the following model: $\yhat = b_0 + b_1 x + b_2 x^2$. What is the interpretation of $b_1$? What is the interpretation of $b_2$? Although we didn't yet discuss the \qu{true} interpretation of OLS coefficients, do your best with this.}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+$b_1$ is the linear change and $b_2$ is the quadratic change to $\yhat$ when $x$ increases by 1.
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(c)
+%-----------------------------------------------
+\hardsubproblem{Assuming the model from the previous question, if $x \in \mathcal{X} = \bracks{10.0, 10.1}$, do you expect to \qu{trust} the estimates $b_1$ and $b_2$? Why or why not?}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Yes, I do trust the estimates $b_1$ and $b_2$ because the input space $\mathcal{X}$ is relatively small and a small change of $x$ within the input space would be explained by the estimates $b_1$ and $b_2$. 
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------
+% Part(d)
+%-----------------------------------------------
+\hardsubproblem{We fit the following model: $\yhat = b_0 + b_1 x_1 + b_2 \natlog{x_2}$. We spoke about in class that $b_1$ represents loosely the predicted change in response for a proportional movement in $x_2$. So e.g. if $x_2$ increases by 10\%, the response is predicted to increase by $0.1 b_2$. Prove this approximation from first principles.}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Recall the Taylor series of
+\[
+	\ln(x+1) = x - \dfrac{x^2}{2} + \dfrac{x^3}{3} + \cdots \approx x - \dfrac{x^2}{2} + \dfrac{x^3}{3} \quad \text{if } x \approx 0 
+\]	
+\[
+	\ln(x) = \ln\left((x+1) -1 \right) \approx x -1 \quad \text{if } x \approx 1
+\]
+
+We then have,
+\begin{align*}
+\Delta \yhat &= \left[b_0 + b_1x_1 + b_2 \ln\left( x_f \right) \right] - \left[ b_0 + b_1x_1 + b_2 \ln\left( x_0 \right) \right] \\
+&= b_2\left( \ln\left( x_f \right) - \ln\left( x_0 \right) \right) \\
+&= b_2 \left( \ln\left( \dfrac{x_f}{x_0} \right) \right) \approx b_2 \left( \dfrac{x_f}{x_0} -1 \right) = b_2 \left( \dfrac{x_f - x_0}{x_f} \right)
+\end{align*}
+
+Suppose $\Delta x = x_f - x_0 = 1.1x_0 - x_0 = 0.1 x_0$. Then we have, 
+\[
+	\Delta \yhat \approx b_2 \left( \dfrac{0.1x_0}{1.1x_0} \right) = b_2\dfrac{0.1}{1.1} = \dfrac{1}{11}b_2 = 0.\overline{09}b_2 \approx 0.1b_2 \quad \blacksquare
+\]
+
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(e)
+%-----------------------------------------------
+\easysubproblem{When does the approximation from the previous question work? When do you expect the approximation from the previous question not to work?}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The approximation in the previous question works when the ratio of the $x_f$ over $x_0$ is close to 1. When $x_f$ is much larger than $x_0$, i.e. when the change in $x$ gets very large, the above approximation is not as accurate nor useful. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(f)
+%-----------------------------------------------
+\intermediatesubproblem{We fit the following model: $\natlog{\yhat} = b_0 + b_1 x_1 + b_2 \natlog{x_2}$. What is the interpretation of $b_1$? What is the \emph{approximate} interpretation of $b_2$? Although we didn't yet discuss the \qu{true} interpretation of OLS coefficients, do your best with this.}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+$b_1$ represents loosely the predicted change in response for a proportional movement in $x_2$.
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------
+% Part(g)
+%-----------------------------------------------
+\easysubproblem{Show that the model from the previous question is equal to $\yhat = m_0 m_1^{x_1} x_2^{b_2}$ and interpret $m_1$.}\spc{2}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+From part (f) we have that,
+\begin{align*}
+	\natlog{\yhat} &= b_0 + b_1 x_1 + b_2 \natlog{x_2} \\
+	\overset{\emph{exponentiate}}{\implies} \yhat  &= e^{b_0}\cdot e^{b_1 x_1} \cdot e^{\natlog{x_2^{b_2}}} \\
+	\implies \yhat &= m_0 \cdot m_1^{x_1} \cdot x_2^{b_2}
+\end{align*}
+
+The interpretation for $m_1$ is that if $x_1$ increases by 1, then $\yhat$ is multiplied by $m_1$.
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+
+\newpage
+%===============================================
+% PROBLEM #3: EXTRAPOLATION
+%==============================================
+\problem{These are some questions related to extrapolation.}
+
+\begin{enumerate}
+%-----------------------------------------------
+% Part(a)
+%-----------------------------------------------
+\easysubproblem{Define extrapolation and describe why it is a net-negative during prediction.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Consider $p_{\emph{raw}}$ features given by the columns of $\X$. Define:
+\[
+	\text{Range}[\X] = [x_{\cdot 1, min}, x_{\cdot 1, max}] \times [x_{\cdot 2, min}, x_{\cdot 2, max}] \times \cdots \times [x_{\cdot p, min}, x_{\cdot p, max}]
+\]
+
+This is a hyperrectangle representing the space of $x-$vectors (observations) that are seen in $n$ examples. \emph{Extrapolation} is when we predict for $x-$ vectors outside of $\text{Range}[\X]$. Models are developed to \emph{interpolate} which is to predict for $x-$vectors inside of the $\text{Range}[\X]$. The different algorithms and candidate set functions often leads a net-negative in prediction during extrapolation due to the inherent unpredictability of the behavior outside the $\text{Range}[\X]$.
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(b)
+%-----------------------------------------------
+\easysubproblem{Do models extrapolate differently? Explain.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Yes, different model fitting procedures, $ \mathcal{A}$, extrapolate differently. Additionally, when we expand the complexity of our candidate set, $\mathcal{H}$, from vary degrees of polynomials to exponentials, logarithms, trigonometric function, etc., each function has a particular attribute which differs among the rest that would lead to differences in its extrapolation. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(c)
+%-----------------------------------------------
+\easysubproblem{Why do polynomial regression models suffer terribly from extrapolation?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Polynomial regression models perform poorly from extrapolation, particularly when using higher degree polynomials due to \emph{Runge's phenomenon} which is a phenomenon that occurs with polynomial functions of high degree where they may unpredictably oscillate near the edges of an interval.
+\end{tcolorbox}
+
+\end{enumerate}
+
+
+\newpage
+%===============================================
+% PROBLEM #4: MODEL SELECTION
+%==============================================
+\problem{These are some questions related to the model selection procedure discussed in lecture.}
+
+\begin{enumerate}
+%-----------------------------------------------
+% Part(a)
+%-----------------------------------------------
+\easysubproblem{Define the fundamental problem of \qu{model selection}.}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The fundamental problem of \qu{model selection} is inherent in the name which is to choose only \textbf{one} model from among various ones. To goal is to select a model that has the lowest \textit{out-of-sample} (oos) error. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(b)
+%-----------------------------------------------
+\easysubproblem{Using two splits of the data, how would you select a model?}\spc{8}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+
+Each observation in the original dataset gets represented once inside of a test set. Each split ``crosses over'' the test to the next set of $\frac{1}{2}$ indices. We compute the out-of-sample errors for both splits to each of the $M$ models that we are considering. We then average the out-of-sample errors for each $M$ models. We then select the model with the lowest average out-of-sample error. 
+
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(c)
+%-----------------------------------------------
+\easysubproblem{Discuss the main limitation with using two splits to select a model.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The main limitation of only using two splits to select a model is that then the training set would be too small to use which would then effectively make the \emph{out-of-sample} estimates of performance biased in the direction of bad performance. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(d)
+%-----------------------------------------------
+\easysubproblem{Using three splits of the data, how would you perform model selection?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+I would start with the given data $\mathbb{D}$ and then select a small fraction of it to be the testing dataset, the non-testing dataset is called the sub-training set or $\mathbb{D}_{\text{sub-train}}$. We then will split $\mathbb{D}_{\text{sub-train}}$ into 3 splits. Then for each of the $M$ models that we are selecting from, we calculate the oos errors for each of the 3 splits and we average those three oos errors for each model. We select the model with the lowest oos error and call it $m_{\star}$.
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(e)
+%-----------------------------------------------
+\easysubproblem{How does using both inner and outer folds in a double cross-validation nested resampling procedure improve the model selection procedure?}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+The inner and outer folds in a double cross-validation nested resampling procedure improves model selection because it helps minimize the potential high variance of the out-of-sample error metrics which is used to assess the performance of the models we are choosing from. If the out-of-sample error varies too much then one may pick the model with a minimum value but due to its high variability then we may just be picking a random model. In each of the outer resamplings we locate a different $m_{\star}$ model, the model with the best performance, and so the final out-of-sample error would help us select the best of the M models. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(f)
+%-----------------------------------------------
+\easysubproblem{Describe how $g_{\text{final}}$ is constructed when using nested resampling on three splits of the data.}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+After using nested resampling on three splits of the data we run the model selection procedure on all of $\mathcal{D}$ which will pick one $m_{\star}$ and that will be $g_{final}$.
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(g)
+%-----------------------------------------------
+\easysubproblem{Describe how you would use this model selection procedure to find hyperparameter values in algorithms that require hyperparameters.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+To find the hyperparameter values from the model selection procedure, we do the following steps:
+\begin{enumerate}
+\item[\#1:] Create a grid of possible lambdas (\emph{hyperparameters}), e.g., 
+\[
+	\lambda_{\text{grid}} = \lbrace 0.001, 0.01, 0.1, 1, 10, 100 \rbrace
+\]
+\item[\#2:] Each of the lambdas (hyperparameters) provides a different model. Now we just use the model selection procedure where we select the best hyperparameter by comparing which model produces the smallest \emph{out-of-sample} error from among the various models. 
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------
+% Part(h)
+%-----------------------------------------------
+\hardsubproblem{Given raw features $x_1, \ldots, x_{p_{raw}}$, produce the most expansive set of transformed $p$ features you can think of so that $p \gg n$.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+We can transform the data of the $p_{raw}$ features by including the following columns:
+\begin{itemize}
+\item include all of the powers up til $n$ for each of the $p_{raw}$ columns
+\item include columns for the $\binom{p_{raw}}{2}$ interaction between two features, then $\binom{p_{raw}}{3}$ interaction between three features, and so on until $\binom{p_{raw}}{p_{raw}}$
+\end{itemize}
+This expansive set of transformed features would include
+\[
+	p = 1 + p_{raw} + n \cdot p_{raw} + \binom{p_{raw}}{2} + \binom{p_{raw}}{3} +  \cdots + \binom{p_{raw}}{p_{raw}} \gg n
+\]
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(i)
+%-----------------------------------------------
+\easysubproblem{Describe the methodology from class that can create a linear model on a subset of the transformed features (from the previous problem) that will not overfit.}\spc{10}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+We provide an algorithm that can flexible create a more expansive $\mathcal{H}$ without overfitting is the main thing that is addressed by ``\emph{non-parametric}'' machine learning. This is when we touch upon tree models, particularly the algorithm \emph{Classification and Regression Trees}(CART, 1984) which is really two algorithms: 
+\begin{itemize}
+\item Classification Tress for $\mathcal{Y} = \lbrace c_1, c_2, \ldots, c_k \rbrace$
+\item Regression Trees for $\mathcal{Y} \subset \reals$
+\end{itemize}
+\end{tcolorbox}
+
+
+\end{enumerate}
+
+
+\newpage
+%===============================================
+% PROBLEM #5: CART ALGORITHMS
+%==============================================
+\problem{These are some questions related to the CART algorithms.}
+
+\begin{enumerate}
+%-----------------------------------------------
+% Part(a)
+%-----------------------------------------------
+\easysubproblem{Write down the step-by-step $\mathcal{A}$ for regression trees.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Binary Tree Models are linear models where the variable are carved into partial spaces like categorical variables where all categorical variables are binarized already. One regression tree algorithm (there are many) is the following:
+\begin{enumerate}
+\item[\#1:] Begin with $\mathcal{D} = \langle \X, \y \rangle $ where 
+\[
+ \X = [\x_{\cdot 1} ~ \x_{\cdot 2} ~ \cdots ~ \x_{\cdot p}] = \begin{bmatrix} -\x_1- \\ -\x_2- \\ \vdots \\ -\x_n-
+ \end{bmatrix} = 
+ \begin{bmatrix}
+ x_{11} & x_{12} & \cdots & x_{1p}\\
+ x_{21} & x_{22} & \cdots & x_{2p}\\
+ \vdots & \vdots & \ddots & \vdots\\
+ x_{n1} & x_{n2} & \cdots & x_{np}
+ \end{bmatrix}
+ \]
+\item[\#2:] Consider all possible orthogonal-to-axis splits, i.e., 
+\begin{align*}
+	&x_1 \leq x_{(1),1},  x_1 \leq x_{(2),1}, \cdots, x_1 \leq x_{(n-1),1}, \\
+	&x_2 \leq x_{(1),2},  x_1 \leq x_{(2),2}, \cdots, x_2 \leq x_{(n-1),2}, \\
+	& \vdots \quad \vdots \quad \vdots\\
+	&x_p \leq x_{(1),p},  x_1 \leq x_{(2),p}, \cdots, x_p \leq x_{(n-1),p} \implies (n-1)p \text{ possible splits}
+\end{align*}
+For each split there are two putative daughter nodes. For each split we assign $\yhat = \ybar$ of the responses in the nodes for the observations that landed in the node. We then calculate SSE in each node, 
+\[
+	\sum_{i \in node} \left(y_i - \ybar_{node} \right)^2
+\]
+\item[\#3:] Locate the ``best split'' by minimizing the following function:
+\[
+	\text{SSE}_{weighted} = \dfrac{n_L \cdot \text{SSE}_L + n_R \cdot \text{SSE}_R}{n_L + n_R}
+\]
+\item[\#4:] and create the split, where, 
+\begin{itemize}
+\item $n_L = $ \# of observations in the left node
+\item $n_R = $ \# of observations in the right node
+\end{itemize}
+
+\item[\#5:] Repeat Steps \#2 - \#4 recursively for each daughter node until daughter node has $\leq N_0$, the node size (hyperparameter), i.e., the number of observations in the node and unless there's only one unique $y$. 
+\end{enumerate}
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(b)
+%-----------------------------------------------
+\hardsubproblem{Describe $\mathcal{H}$ for regression trees. This is very difficult but doable. If you can't get it in mathematical form, describe it as best as you can in English.}\spc{7}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+\[
+	\mathcal{H} = \left\lbrace  \sum_{m = 1}^k c_m \indic{(\x_1, \x_2, \ldots, \x_p) \in R_m}: R_m \text{ is a hyperrectangle} \in \reals^p  \right\rbrace
+\]
+where, 
+\begin{itemize}
+\item $c_m = \dfrac{1}{ \text{\# of }x_i's \in R_m } \displaystyle \sum_{i=1}^{d} y_i \indic{x_i \in R_m} $
+\item $R_m's$ partition the input space $\mathcal{X}$
+\end{itemize}
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(c)
+%-----------------------------------------------
+\intermediatesubproblem{Think of another \qu{leaf assignment} rule besides the average of the responses in the node that makes sense.}\spc{3}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+Another ``leaf assignment'' rule besides the average of the responses in the node could be the mode of the responses. 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(d)
+%-----------------------------------------------
+\intermediatesubproblem{Assume the $y$ values are unique in $\mathbb{D}$. Imagine if $N_0 = 1$ so that each leaf gets one observation and its $\yhat = y_i$ (where $i$ denotes the number of the observation that lands in the leaf) and thus it's very overfit and needs to be \qu{regularized}. Write up an algorithm that finds the optimal tree by pruning one node at a time iteratively. \qu{Prune} means to identify an inner node whose daughter nodes are both leaves and deleting both daughter nodes and converting the inner node into a leaf whose $\yhat$ becomes the average of the responses in the observations that were in the deleted daughter nodes. This is an example of a \qu{backwards stepwise procedure} i.e. the iterations transition from more complex to less complex models.}\spc{5}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+\begin{enumerate}
+\item[1)] Use recursive binary splitting to grow a large on the training data, stopping when each terminal node has $N_0 = 1$ observations. 
+\item[2)] Start from the last node in the tree and convert the previous inner node whose daughter nodes are both leaves and deleting them while converting the inner node into a leaf whose $\yhat$ is the average of in the observations of the responses of the deleted daughter nodes. 
+\item[3)] Step through every continue through every inner node of the tree. 
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+%-----------------------------------------------
+% Part(e)
+%-----------------------------------------------
+\hardsubproblem{Provide an example of an $f(\x)$ relationship with medium noise $\delta$ where vanilla OLS would beat regression trees in oos predictive accuracy. Hint: this is a trick question.}\spc{1}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+If the relationship between the predictors and responses were close to a linear relationship $f(\x)$, then 
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(f)
+%-----------------------------------------------
+\easysubproblem{Write down the step-by-step $\mathcal{A}$ for classification trees. This should be short because you can reference the steps you wrote for the regression trees in (a).}\spc{4}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+One classification tree algorithm is as follows:
+\begin{itemize}
+\item[\#1] Same as Regression Tree Algorithm above
+\item[\#2] Consider all splits as in the Regression Tree Algorithm. For all daughter nodes set $\yhat = \text{Mode}$[$y's$ in the daughter node] and calculate a heterogeneity metric call the ``Gini''
+\[
+	G = \sum_{l = 1}^k \phat_l\left( 1 - \phat_l\right) \quad \text{where } \phat_l = \dfrac{\text{\# in category }l}{\# \text{ observations in node}}
+\]
+\item[\#3] Same as Regression Tree Algorithm above. Take the \# - observations-weighted Gini average, a heterogeneity metric, and minimize it:
+\[
+	G_{W} = \dfrac{n_L \cdot G_L + n_R + G_R}{n_L + n_R}
+\]
+\item[\#4] Same as Regression Tree Algorithm above
+\item[\#5] Same as Regression Tree Algorithm above. Stop splitting a leaf if $N_{node} \leq N_0$ or if $G=0$.  
+\end{itemize}
+\end{tcolorbox}
+
+%-----------------------------------------------
+% Part(g)
+%-----------------------------------------------
+\hardsubproblem{Think of another objective function that makes sense besides the Gini that can be used to compare the \qu{quality} of splits within inner nodes of a classification tree.}\spc{6}
+
+\begin{tcolorbox}[colback=white, sharp corners]
+An alternate objective function that makes sense in addition to the Gini index is \emph{entropy}:
+\[
+	D = - \sum_{l = 1}^k \phat_l \ln(\phat_l)
+\]
+\end{tcolorbox}
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
