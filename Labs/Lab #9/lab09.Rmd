@@ -1,0 +1,365 @@
+---
+title: "Lab 9"
+author: "Bryan Nevarez"
+output: pdf_document
+---
+
+#YARF
+
+For the next couple of labs, I want you to make some use of a package I wrote that offers convenient and flexible tree-building and random forest-building. Make sure you have a JDK installed first
+
+https://www.oracle.com/java/technologies/downloads/
+
+Then try to install rJava
+
+```{r}
+options(java.parameters = "-Xmx4000m")
+pacman::p_load(rJava)
+.jinit()
+```
+
+If you have error, messages, try to google them. Everyone has trouble with rJava!
+
+If that worked, please try to run the following which will install YARF from my github:
+
+```{r}
+if (!pacman::p_isinstalled(YARF)){
+  pacman::p_install_gh("kapelner/YARF/YARFJARs", ref = "dev")
+  pacman::p_install_gh("kapelner/YARF/YARF", ref = "dev", force = TRUE)
+}
+pacman::p_load(YARF)
+```
+
+Please try to fix the error messages (if they exist) as best as you can. I can help on slack.
+
+#Data Munging: a realistic exercise
+
+This lab exercise may be the most important lab of the semester in terms of real-world experience and "putting it all together". We will be constructing a data frame which will then get passed on to the model-building. So this emulates the pre-steps necessary to get to the point where we assume we're at in this class.
+
+We will be joining three datasets in an effort to make a design matrix that predicts if a bill will be paid on time. Clean up and load up the three files. Then I'll rename a few features and then we can examine the data frames.
+
+Make sure you set the directory of RStudio to the directory where this file lives and make sure you download the bills_dataset folder from github (you can do this via `git pull` and then copying that directory over).
+
+```{r}
+#setwd(...)
+rm(list = ls())
+pacman::p_load(tidyverse, magrittr, data.table, R.utils)
+bills = fread("bills_dataset/bills.csv.bz2")
+payments = fread("bills_dataset/payments.csv.bz2")
+discounts = fread("bills_dataset/discounts.csv.bz2")
+setnames(bills, "amount", "tot_amount")
+setnames(payments, "amount", "paid_amount")
+skimr::skim(bills)
+skimr::skim(payments)
+skimr::skim(discounts)
+```
+
+The unit we care about is the bill. The y metric we care about will be "paid in full" which is 1 if the company paid their total amount (we will generate this y metric later).
+
+Since this is the response, we would like to construct the very best design matrix in order to predict y.
+
+First, join the three datasets in an intelligent way. You will need to examine the datasets beforehand.
+
+```{r}
+bills_and_payments = left_join(bills, payments, by = join_by("id" == "bill_id"))
+bills_and_payments_and_discounts = left_join(bills_and_payments, discounts, by = join_by("discount_id" == "id"))
+
+```
+
+Now create the binary response metric `paid_in_full` as the last column and create the beginnings of a design matrix `bills_data`. Ensure the unit / observation is bill i.e. each row should be ONE bill ONLY! 
+
+```{r}
+bills_and_payments_and_discounts %>%
+  filter((!is.na(transaction_date) & transaction_date <= due_date) | is.na(transaction_date))
+bills_and_payments_and_discounts %<>%
+  group_by(id) %>%
+  mutate(payment_total = sum(paid_amount))
+bills_and_payments_and_discounts %<>%
+  mutate(payment_total = ifelse(is.na(payment_total), 0, payment_total))
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  mutate(paid_in_full = as.numeric(payment_total >= tot_amount))
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  group_by(id) %>%
+  mutate(payment_at_least_one_month_before_due_date = as.numeric(as.integer(due_date) - as.integer(transaction_date) >= 30)) 
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  group_by(id) %>%
+  mutate(number_of_payments_made_already = sum(payment_at_least_one_month_before_due_date)) 
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  group_by(id) %>%
+  mutate(number_of_payments_made_already = ifelse(is.na(number_of_payments_made_already), 0, number_of_payments_made_already)) 
+
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  group_by(id) %>%
+  slice(1)
+table(bills_and_payments_and_discounts$paid_in_full)
+
+```
+
+How should you add features from transformations (called "featurization")? What data type(s) should they be? Make some features below if you think of any useful ones. Name the columns appropriately so another data scientist can easily understand what information is in your variables. Make sure missingness (if in a categorical variable) is treated as a legal level of that variable. Make sure the response variable is there too in the final data frame.
+
+```{r}
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  mutate(due_date_as_integer = as.integer(due_date))
+
+#do customer id's into factor for common customers > 10 otherwise 'other'
+#convert discount id to factor if number of number of discount id's is > 10. Drop all other columns from discount table
+
+bills_and_payments_and_discounts = bills_and_payments_and_discounts %>%
+  select(-id.y, -id, -due_date, -invoice_date, -customer_id, -discount_id, -paid_amount, -transaction_date, -num_days, -pct_of, -days_until_discount, -payment_total, payment_at_least_one_month_before_due_date)
+
+bills_and_payments_and_discounts
+```
+
+
+# Regression Trees
+
+You can use the `YARF` package if it works, otherwise, use the `randomForest` package (the canonical R package for this algorithm).
+
+Let's take a look at a simulated sine curve. Below is the code for the data generating process:
+
+```{r}
+rm(list = ls())
+n_train = 500
+sigma = 0.3
+x_min = 0
+x_max = 10
+
+f_x = function(x){sin(x)}
+x_train = runif(n_train, x_min, x_max)
+y_train = f_x(x_train) + rnorm(n_train, 0, sigma)
+```
+
+Plot an example dataset of size 500:
+
+```{r}
+ggplot(data.frame(x=x_train, y = y_train)) + aes(x,y) + geom_point()
+```
+
+Create a test set of size 500 from this data generating process:
+
+```{r}
+x_test = runif(n_train, x_min, x_max)
+y_test = f_x(x_test) + rnorm(n_train, 0, sigma)
+```
+
+Locate the optimal node size hyperparameter for the regression tree model. I believe you can use `randomForest` here by setting `ntree = 1`, `replace = FALSE`, `sampsize = n` (`mtry` is already set to be 1 because there is only one feature) and then you can set `nodesize`. Plot nodesize by out of sample s_e. Plot.
+
+```{r}
+max_nodesize_to_try = 70
+in_sample_errors = array(NA, max_nodesize_to_try)
+oos_errors = array(NA, max_nodesize_to_try)
+
+for (i in 1:max_nodesize_to_try){
+  tree_mod = YARFCART(data.frame(x=x_train), y_train, nodesize = i, calculate_oob_error = FALSE)
+  
+  yhat_train = predict(tree_mod, data.frame(x = x_train))
+  in_sample_errors[i] = sd(y_train - yhat_train)
+  
+  yhat_test = predict(tree_mod, data.frame(x = x_test))
+  oos_errors[i] = sd(y_test - yhat_test)
+}
+
+ggplot(data.frame(nodesize= 1:max_nodesize_to_try, oos_errors = oos_errors)) + 
+  geom_point(aes(nodesize, oos_errors), col = "blue")
+
+```
+
+Plot the regression tree model g(x) with the optimal node size.
+
+```{r}
+#optimal nodesize
+optimal_nodesize = which.min(oos_errors)
+
+
+tree_mod_optimal_nodesize = YARFCART(data.frame(x = x_train), y_train, nodesize = optimal_nodesize, calculate_oob_error = FALSE)
+
+yhat = predict(tree_mod_optimal_nodesize, data.frame(x= x_test))
+ggplot(data.frame(x = x_test, y = y_test), aes(x, y)) + 
+  geom_point(lwd = 0.6) +
+  geom_point(aes(x, y), data.frame(x = x_test, y = yhat), col = "blue")
+
+```
+
+Find the oosRMSE of this optimal-node-size model.
+
+```{r}
+sd(yhat-y_test)
+```
+
+Provide the bias-variance decomposition of this DGP fit with this model. It is a lot of code, but it is in the practice lectures. If your three numbers don't add up within two significant digits, increase your resolution.
+
+```{r}
+training_gs = list() #storing entire objects - need a hash
+Nsim = 200 #trees take longer to build than OLS models
+sigma = 1
+all_residuals = matrix(NA, nrow = Nsim, ncol = length(y_test))
+
+#go back to the sine curve example from class when we introduced the tree model
+f = function(x){sin(x)}
+
+for (nsim in 1 : Nsim){
+  cat ("nsim", nsim, "of", Nsim, "\n")
+  #simulate dataset $\mathbb{D}$
+  x_train = runif(n_train, x_min, x_max)
+  delta_train = rnorm(n_train, 0, sigma)
+  y_train = f(x_train) + delta_train
+  # ggplot(data.frame(x = x, y = y), aes(x, y)) + geom_point(lwd=0.6) 
+  
+  #fit a model g | x's, delta's and save it
+  g_model = YARFCART(data.frame(x = x_train), y_train, calculate_oob_error = FALSE, verbose = FALSE)
+  training_gs[[nsim]] = g_model
+  
+  #generate oos dataset and save residuals on oos data
+  x_test = runif(length(y_test), x_min, x_max)
+  delta_test = rnorm(length(y_test), 0, sigma) #mean zero, variance sigsq always (not dependent on value of x)
+  y_test = f(x_test) + delta_test
+  y_hat_test = predict(g_model, data.frame(x = x_test))
+  all_residuals[nsim, ] = y_test - y_hat_test
+}
+
+
+head(training_gs, 2)
+
+
+mse = mean(c(all_residuals)^2)
+mse
+
+
+resolution = 1000
+#generate x and the truth
+x = seq(x_min, x_max, length.out = resolution)
+
+#now estimate the expectation of g by averaging all the different models
+g_avg_x = array(0, resolution)
+for (nsim in 1 : Nsim){
+  g_nsim = training_gs[[nsim]]
+  g_avg_x = g_avg_x + predict(g_nsim, data.frame(x = x))
+}
+g_avg_x = g_avg_x / Nsim #average of all models
+
+#now plot
+ggplot(data.frame(x = x, f = f(x), expe_g = g_avg_x)) + 
+  geom_line(aes(x, expe_g), col = "red", lwd = 2) +
+  geom_line(aes(x, f), col = "green", lwd = 1)
+
+biases = f(x) - g_avg_x
+expe_bias_g_sq = mean(biases^2)
+expe_bias_g_sq
+
+
+var_x_s = array(NA, min(Nsim, 50))
+for (nsim in 1 : min(Nsim, 50)){ #otherwise takes too long
+  g_nsim = training_gs[[nsim]]
+  g_x = predict(g_nsim, data.frame(x = x))
+  var_x_s[nsim] = mean((g_x - g_avg_x)^2)
+}
+
+expe_var_g = mean(var_x_s)
+expe_var_g
+
+mse
+sigma^2
+expe_bias_g_sq
+expe_var_g
+sigma^2 + expe_bias_g_sq + expe_var_g
+
+```
+
+# Classification Trees
+
+Let's get the letter recognition data from the `mlbench` package.
+
+```{r}
+rm(list = ls())
+pacman::p_load(mlbench)
+data(LetterRecognition, package = "mlbench")
+n = nrow(LetterRecognition)
+skimr::skim(LetterRecognition)
+```
+
+This dataset has 20,000 examples. Create a training-select-test split so that they each have 1,000 observations.
+
+```{r}
+# Training split
+train_idx = sample(1 : n, 1000)
+letters_train = LetterRecognition[train_idx, ]
+y_train = letters_train$lettr
+X_train = letters_train
+X_train$lettr = NULL
+n_train = nrow(X_train)
+
+# Select Split
+select_idx = sample(setdiff(1 : n, train_idx), 1000)
+letters_select = LetterRecognition[select_idx, ]
+y_select = letters_select$lettr
+X_select = letters_select
+X_select$lettr = NULL
+
+# Test Split
+test_idx = sample(setdiff(1 : n, c(train_idx, select_idx)), 1000)
+letters_test = LetterRecognition[test_idx, ]
+y_test = letters_test$lettr
+X_test = letters_test
+X_test$lettr = NULL
+
+```
+
+Find the optimal classification tree by using the model selection algorithm to optimize the nodesize hyperparameter. Use misclassification error as the performance metric.
+
+```{r}
+nodesizes = seq(1, 30, by = 2)
+misclassification_errs = array(NA, 4)
+
+for (i in 1:length(nodesizes)){
+  tree_mod = YARFCART(X_train, y_train, calculate_oob_error = FALSE, nodesize = nodesizes[i])
+  y_hat_select = predict(tree_mod, X_select)
+  misclassification_errs[i] = mean(y_select != y_hat_select)
+}
+
+misclassification_errs
+
+```
+
+Plot the oos misclassification error by nodesize.
+
+```{r}
+ggplot(data.frame(nodesize = nodesizes, misclassification_error = misclassification_errs)) + 
+  aes(x = nodesize, misclassification_error = misclassification_errs) +
+  geom_point(aes(x = nodesizes, y = misclassification_errs)) 
+```
+
+Construct the optimal classification tree on train and select sets. Then estimate generalization error. Save `y_hat_test` as we'll need it later.
+
+```{r}
+nodesize_opt = nodesizes[which.min(misclassification_errs)]
+tree_mod_opt = YARFCART(rbind(X_train, X_select), c(y_train, y_select),
+                        calculate_oob_error = FALSE, 
+                        nodesize =nodesize_opt)
+y_hat_test = predict(tree_mod, X_test)
+mean(y_test != y_hat_test)
+```
+
+Print out the top of the tree so we can have some level of interpretation to how the model g is predicting.
+
+```{r}
+illustrate_trees(tree_mod_opt, max_depth = 5, length_in_px_per_half_split = 30, open_file = TRUE)
+```
+
+Create a "confusion matrix". This means it shows every predicted level (which is a letter in our case) and every actual level. Here you'll see every type of error e.g. "P was predicted but the real letter is H", "M was predicted but the real letter is N" etc. This is really easy: one call to the `table` function is all you need.
+
+```{r}
+table(y_test, y_hat_test)
+```
+
+Which errors are most prominent in this model?
+
+The most prominent errors, which were those correctly classified in the single digits, made in this model were the classification of the letters `E`, `F`, `H`, and `S`. 
+
+
+
+
