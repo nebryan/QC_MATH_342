@@ -1,0 +1,172 @@
+\documentclass[12pt]{article}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{multicol}
+%\usepackage[margin=0.9in]{geometry}
+\include{preamble}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{blue!180},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+\title{Checking Out the Prices: \\ A Predictive Look Into the 2016/2017 \\Apartment Market in Queens}
+
+\author{Final Project for Math 642, Data Science at Queens College}
+\date{Due: May 26, 11:59PM by email}
+
+\begin{document}
+\maketitle
+
+\begin{flushright}
+By Bryan Nevarez\\
+In collaboration with:\\
+Joseph Cina \\
+Tao Wu
+\end{flushright}
+
+\begin{abstract}
+\noindent Predictive modeling has become a pervasive human endeavor with the coupling of ever increasing computing capability in making predictions of real-world phenomena such as weather events, financial trends, outcomes in sports, etc. Harnessing the ability to create and develop models from data offers mankind the possibility of optimizing productivity under time constraints, enhance performance in competitive environments, or gain insights into phenomena that were once deemed unexplainable. In this paper, we will catch a glimpse of both the power and limitations of modeling in the world of machine learning through the enterprise of predicting sales price of the apartment market in Queens, NY. 
+\end{abstract}
+
+\newpage
+
+\section{Introduction}
+
+The essential building blocks of machine learning can be summarized in four words: data, algorithm, tuning, evaluation (Foss et. al. 2024). The \textit{data} portion of machine learning concerns itself with the methods for creating training and test sets from raw (un)structured data. The \textit{algorithm} refers to the machine learning procedure that will be implemented to be trained upon a given train set to test its predictive performance on test sets. The \textit{tuning} refers to the configuration of an algorithm based upon its hyperparameters to best optimize both fitting and its generalization ("learning") of the data. Lastly, the \textit{evaluation}, also known as \textit{validation} phase in the machine learning paradigm deals with the measures to assess the quality of the predictions made by the algorithm upon new and previously unseen data. The project at hand is to go through each of these stages given a dataset on apartments in Queens to be modeled by three machine learning algorithms which are to be tuned to see how well each of them predicts the sales price of an apartment in Queens. 
+
+\section{The Data}
+
+The data that was given at the onset of the project was a csv file on data regarding apartments in Queens, NY sold between February 2016 and February 2017. The dataset came from a raw download from Amazon's MTurk system. The original number of rows of the data set was $n = 2230$ and the original number of columns, indicating our original set of predictors was $p_{raw} = 55$. The features were comprised of 36 character, 5 logical, and 14 numeric data types. 
+
+\subsection{Featurization, Errors and Missingness}
+
+The data munging phase of the project heavily dealt with the \texttt{full\_address\_or\_zip\_code} column of the original data set. There was a small finite number of entries for this column feature where the addresses were entered with one too many space characters and incomplete addresses. These entries were found by the help of the internet and were manually corrected. This was a crucial step in this machine learning pipeline because the key information in this column that would prove to be helpful in joining an additional table of pertinent data was the \texttt{zip\_code}. So after the addresses were manually corrected the zip code for each address was extracted and a new column of zip codes took precedence over full address. Other columns such as \texttt{cats\_allowed}, \texttt{dogs\_allowed}, \texttt{dining\_room\_type}, \texttt{kitchen\_type}, \texttt{garage\_exists} were manually altered as well for the entries that either had incomplete words or misspellings. 
+
+The first 28 columns of the original dataset was dropped due to its irrelevance to the sale price of an apartment. The columns of bathrooms were made into a single column. The listing price which were numbers in the thousands were converted into the thousands. A new feature of age of the apartment was created. For the number of community districts that appeared less than 5 times in the data set were grouped under a level of ``Other.'' The levels of dining, dining area, none were collapsed for the dining room column. 
+
+A table with data from \url{datacommons.techsoup.org} that incorporated the median age, the median income, the population and the housing units with respect to zip codes in NYC  was left joined with the original dataset of apartment data. After joining the two tables together we proceeded with creating a missingness table and binding it to the joined table column-wise and ran \texttt{MissForest} on the whole table. This became the design matrix for the rest of the project.  
+
+\section{Modeling}
+
+The main goal is to find a model that best captures the underlying relationship between the predictors from our \texttt{housing\_design\_matrix} and our target value \texttt{sale\_price} and so we will compare three models, namely regression tree, linear regression, and random forest to see which one is most suitable for the task of predicting a Queens apartment's selling price. 
+
+\subsection{Regression Tree Modeling}
+A regression tree was fit on our \texttt{housing\_design\_matrix} dataset and an illustration of the first few layers of our tree is found below. Based upon our regression tree here are the top 10 most important features needed to predict \texttt{sale\_price}: 
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \texttt{listing\_price}
+\item \texttt{common\_charges}
+\item  \texttt{total\_taxes}
+\item  \texttt{median\_income}
+\item  \texttt{parking\_charges}
+\item  \texttt{pct\_tax\_deductible}
+\item \texttt{community\_district\_num25} 
+\item \texttt{sq\_footage}
+\item  \texttt{median\_income}
+\item  \texttt{age\_of\_apt}
+\end{itemize}
+\end{multicols}
+
+Seven out of the 10 features identified by the regression tree as being important for prediction on \text{sale\_price} has to deal with money as either a charge, taxes, or income. Other features such as the \texttt{age\_of\_apt}, \texttt{community\_district\_num25},\texttt{sq\_footage} have more ancillary significance in the prediction of the sale price. We will see how some of these features most commonly seen in the first few layers of our regression tree will coincide with the most significant features found in OLS. 
+
+\newpage
+\begin{center}
+\includegraphics[scale=.25, angle = 90]{yarf_mod_tree_1.png}
+\end{center}
+
+\subsection{Linear Modeling}
+
+We fit a vanilla OLS onto our data and our performance metrics told us that 96\% of the variation in the \texttt{sale\_price} was explained by the independent variables in our model. Given our regression analysis the most significant features for prediction would be:
+\begin{multicols}{2}
+\begin{itemize}
+ \item \texttt{common\_charges}
+\item \texttt{community\_district\_num25} 
+\item \texttt{fuel\_typegas}
+\item \texttt{fuel\_typeoil} 
+\item \texttt{maintenance\_cost} 
+\item \texttt{num\_floors\_in\_building}
+\item  \texttt{total\_taxes}
+\item \texttt{listing\_price}
+\item \texttt{is\_missing\_fuel\_type} 
+\item \texttt{is\_missing\_maintenance\_cost}
+\item  \texttt{is\_missing\_total\_taxes}
+ \end{itemize}
+\end{multicols}
+
+From the regression tree modeling we saw that the regression tree's most important feature was the listing price and we see a similar result in the significance level from running OLS as seen by the summary output table (found at the end of the section). According to the coefficient for \texttt{listing\_price} from our linear model, if all other features remain constant, an additional change of the listing price by one dollar will change the sale price of the apartment by \$1.07. There seems to be a direct correspondence between \texttt{listing\_price} and \texttt{sale\_price}. Given our results, the linear model will provide a robust prediction for our model. 
+
+Below is the table for the linear model \texttt{ols\_housing\_model}:
+
+\begin{center}
+\includegraphics[scale=.55]{ols1}\\
+\includegraphics[scale=.55]{ols2}\\
+\includegraphics[scale=.55]{ols3}\\
+\includegraphics[scale=.55]{ols4}\\
+\includegraphics[scale=.55]{ols5}
+\end{center}
+
+\subsection{Random Forest Modeling}
+
+The random forest is expected to be the best choice out of the three supervised machine learning algorithms for prediction on new, previously unseen data because a random forest theoretically shrinks mean square error (MSE) the most out of the three. The reason why RF reduces MSE more than OLS and regressions trees is because in the bias-variance decomposition of MSE we have the expression 
+\[
+	\text{MSE} = \expe{\text{Bias}[g(\x_*)]^2} + \rho \expe{\var{g_1(\x_*)}}  +  \sigma^2
+\] 
+ and $\rho$ decreases since random forest decorrelates the tree models, i.e. $\rho$ decreases, by its inherent implementation of choosing a random subset of the $p_{raw}$ features of size $m_{try}$, its hyperparameter. Employing this non-parametric model trades an increase for predictive accuracy for a loss in interpretability. Random forests do have a tendency to overfit the data but the overall generalization error does not increase due to an increase in the number of trees. The best thing that could be done was to tune the hyperparameters of 1) number of trees, 2) $m_{try}$, and 3) nodesize $N_0$.
+
+\section{Performance Results}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{final_error_metrics}
+    \caption{A table of the performance metrics.}
+    \label{fig:error_metrics}
+\end{figure}
+
+All of the in-sample and out-of-sample (oos) performance metrics for all three models have been tabulated in figure \ref{fig:error_metrics} above. The coefficient of determination, $R^2$, for all three models, dipped in predictive performance as expected. With respect to $R^2$ predictive power OLS was least, followed by regression trees, and with random forest performing best out of the three ML models. Out of the three regression ML algorithms, it is expected that OLS would have fare least in the $R^2$ performance metric. OLS misspedification error and given the complexity of the true target function $f$ would perform least in ``fitting'' the data as noted by its numerical $R^2$ metric. Regression tree and random forest perform nearly the same with respect to the in-sample $R^2$ metric but the random forest does slightly better out-of-sample. Random forest tend to out-perform the regression trees in out-of-sample prediction as noted by the $R^2$ metric because regression trees tend to overfit the training data which leads to lessen the ability to generalize prediction to newly unseen data whereas random forests employ bagging/ensemble techniques and randomizes the choices of features to train upon further diversifying and decorrelating the trees which enhances its predictive power out-of-sample.
+
+With regards to the in-sample root mean square error (rmse), we see that OLS performs significantly worse than the regression trees and random forest while regression trees and random forest both perform comparatively. But the out-of-sample rmse for random forest is the least thereby confirming once more that the random forest model accurately predicts best out-of-sample out of the three models. Based upon its out-of-sample rmse, the random forest we fit onto to the dataset will on average have a difference between the predicted and actual values of the sale price will be roughly \$36,000 dollars compared with that of regression trees and OLS which are roughly \$38,000 and \$44,300, respectively. 
+
+To validate that our oos estimates were accurately indicative of our three models predictive accuracy, a 5-fold cross-validation was performed for each model with respect to its oos rmse and so we have some level of confidence that by in large on average the random forest model will have least oos rmse which crowns the random forest as the best model to predict the sales price of an apartment out of the three. 
+
+\section{Discussion}
+	\hspace{3mm}	Certain decisions and steps that were done in this project to evaluate the Queens apartment dataset and predict the target value of the sale price, does have me considering things I could have done differently or explored further if time, resources, and knowledge of machine learning were not limiting factors. I would have liked to have used the \texttt{model\_type} feature for its suspected relationship to the price of an apartment. The decision to drop this feature regrettably came from its ``messiness" and highly variable entry values that it  contained. Also, the \texttt{listing\_price} and \texttt{sale\_price} features initially appear to have valuable information about each other, however, this was a moot point since none of the rows of the original dataset contained both of these values. We were relegated, instead, to use \texttt{MissForest} for the imputation of the missing values. Lastly, a feature like \texttt{pct\_tax\_deductible} appears to be quite informative regarding the types of potential buyers that would be interested in purchasing the property. There was a dataset I found online directly from the IRS that contained a wealth of tax information per zip code but the data had a complex structure that I could not, at the time, sift through or take advantage of in joining it to the original dataset. This is when I realized how useful the coupling of domain knowledge of a phenomena such as tax information and purchasing power along with the technical skills in manipulating  datasets could have really benefited in gleaning extra information on the underlying relationship between the features of the Queens apartment market and the accuracy of a trained model to predict the value of a Queens' apartment sale price. 
+	
+	\hspace{3mm}	 I do not think my model is production ready nor do I deem my model viable threat to Zillow's current performance. I suspect that both the size of the data set that the machine learning models were trained upon and the quality of the predictors that were both included and expanded upon limit the usefulness of the model. There are other viable machine learning algorithms that could have been employed such as boosting that could give a more predictive accuracy, as well as the possibility of employing other featurizations of the dataset that could have improved predictive performance of the model. 
+
+\subsection*{Acknowledgments}
+\hspace{3mm}	 I would like to thank my two collaborators with whom I touched base with and consulted on how to start this project and see it through. I give my highest kudos to Tao for his unrivaled dedication to academic proficiency and for his commitment to not leaving any stone unturned regarding the details of the material that we have learned under Professor Kapelner over the last two semesters. And to Joe, a man with the seasoned wisdom and the wide-range experience of an elder statesmen, I give my utmost respect for the high bar of excellence he would set for us all. It was a pleasure and honor to share the classroom with these two distinguished gentlemen. I sincerely wish them both well in their future endeavors. 
+
+\subsection*{References}
+
+Foss N, Kotthoff L. (2024). Data and Basic Modeling. In Bischl B, Sonabend R, Kotthoff L, Lang M, (Eds.), Applied Machine Learning Using mlr3 in R. CRC Press. \url{https://mlr3book.mlr-org.com/data_and_basic_modeling.html.}
+
+\newpage
+\section*{Code Appendix}
+
+\lstinputlisting[language=R]{Math 642 Final Project.Rmd}
+
+\end{document}
